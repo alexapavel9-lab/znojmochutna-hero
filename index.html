@@ -130,18 +130,18 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .action-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:11px;border:1px dashed var(--line);color:var(--ink);font-weight:500;font-size:14px;width:100%;transition:.18s var(--ease)}
 .action-btn:hover{border-color:var(--mint);color:var(--mint-hi);border-style:solid}
 .action-btn small{font-family:var(--font-mono);font-size:10px;color:var(--mono);text-transform:uppercase;letter-spacing:.1em}
-/* featured — brand zelené odstíny (jedna zeleň) */
+/* featured — barevné akcenty per kapitola (vinobraní vínová, atd.) */
 .feat{position:relative;padding:24px;border-right:none;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;color:#fff;min-height:250px;isolation:isolate}
 .feat::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.98}
-.feat.wine::before  {background:linear-gradient(150deg,#17603F 0%,#0C3A26 100%)}
-.feat.map::before   {background:linear-gradient(150deg,#12563A 0%,#0A3826 100%)}
-.feat.cellar::before{background:linear-gradient(150deg,#1C6644 0%,#0D3E29 100%)}
-.feat.plan::before  {background:linear-gradient(150deg,#0F5A48 0%,#0A3826 100%)}
-.feat .ghost{position:absolute;right:-12px;top:-24px;font-size:150px;line-height:1;font-weight:700;color:rgba(147,211,162,.16);z-index:-1;letter-spacing:-.04em}
-.feat .kicker{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.12em;font-size:10px;color:var(--brand-accent)}
-.feat .f-title{font-size:22px;font-weight:600;line-height:1.1;letter-spacing:-.01em;color:#F0F1EC}
-.feat .f-meta{font-size:12.5px;color:rgba(240,241,236,.78);font-family:var(--font-mono)}
-.feat .f-go{margin-top:10px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:7px;color:var(--brand-accent);transition:gap .2s var(--ease)}
+.feat.wine::before  {background:linear-gradient(150deg,#7a2b48 0%,#3a2b52 46%,#134a30 100%)}
+.feat.map::before   {background:linear-gradient(150deg,#1f6a4a 0%,#14503a 55%,#0c3324 100%)}
+.feat.cellar::before{background:linear-gradient(150deg,#5a3a1f 0%,#3f3a24 45%,#123a26 100%)}
+.feat.plan::before  {background:linear-gradient(150deg,#1c5e63 0%,#164a44 52%,#0e3a2c 100%)}
+.feat .ghost{position:absolute;right:-12px;top:-24px;font-size:150px;line-height:1;font-weight:700;color:rgba(255,255,255,.08);z-index:-1;letter-spacing:-.04em}
+.feat .kicker{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.12em;font-size:10px;color:rgba(255,255,255,.72)}
+.feat .f-title{font-size:22px;font-weight:600;line-height:1.1;letter-spacing:-.01em;color:#fff}
+.feat .f-meta{font-size:12.5px;color:rgba(255,255,255,.8);font-family:var(--font-mono)}
+.feat .f-go{margin-top:10px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:7px;color:#fff;transition:gap .2s var(--ease)}
 .feat:hover .f-go{gap:11px}
 
 /* ============================================================
@@ -203,6 +203,10 @@ h1 .accent{color:var(--mint)}
 .tile .t-links a:hover{color:var(--ink)}
 .tile::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--mint);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
 .tile:hover::after{transform:scaleX(1)}
+.tile[data-key="program"]::after  {background:linear-gradient(90deg,#7a2b48,#134a30)}
+.tile[data-key="objevuj"]::after   {background:linear-gradient(90deg,#1f6a4a,#0c3324)}
+.tile[data-key="vino"]::after      {background:linear-gradient(90deg,#5a3a1f,#123a26)}
+.tile[data-key="planovani"]::after {background:linear-gradient(90deg,#1c5e63,#0e3a2c)}
 
 /* ============================================================
    FOOTER — brand anchor (tmavě zelený)
