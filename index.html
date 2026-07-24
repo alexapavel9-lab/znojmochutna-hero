@@ -158,9 +158,9 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .hero{position:relative;overflow:hidden;background:var(--bg-hero);background-image:var(--glow);min-height:calc(100dvh - var(--header-h));display:flex;flex-direction:column;transition:background .4s var(--ease)}
 .hero-top{max-width:var(--max);margin-inline:auto;width:100%;padding:26px var(--gutter) 0;display:flex;justify-content:space-between}
 .hero-inner{max-width:var(--max);margin-inline:auto;width:100%;padding:clamp(24px,3vw,48px) var(--gutter);flex:1;display:flex;flex-direction:column;justify-content:center}
-h1{font-weight:700;letter-spacing:-.035em;line-height:.9;font-size:clamp(56px,12vw,168px)}
+h1{font-weight:700;letter-spacing:-.03em;line-height:.94;font-size:clamp(38px,6.2vw,88px)}
 h1 .line{display:block}
-h1 .pridomek{display:block;font-family:var(--font-mono);font-weight:400;letter-spacing:-.04em;line-height:1.04;color:var(--mint);font-size:clamp(38px,8vw,116px);margin-top:.05em;animation:zchFade 3s ease-in-out infinite}
+h1 .pridomek{display:block;font-family:var(--font-mono);font-weight:400;letter-spacing:-.04em;line-height:1.05;color:var(--mint);font-size:clamp(28px,4.6vw,64px);margin-top:.08em;animation:zchFade 2.2s ease-in-out infinite}
 h1 .pridomek.paused{animation-play-state:paused}
 .lede{margin-top:clamp(24px,3vw,38px);max-width:30ch;font-size:clamp(17px,1.6vw,21px);line-height:1.5;color:var(--ink-dim);font-weight:400}
 .hero-actions{margin-top:clamp(28px,3.4vw,40px);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -524,7 +524,7 @@ const heroWord = document.getElementById('heroWord');
 if(heroWord && !matchMedia('(prefers-reduced-motion:reduce)').matches){
   let pi = PRIDOMKY.indexOf(heroWord.textContent.trim());
   if(pi < 0) pi = 0;
-  setInterval(()=>{ pi=(pi+1)%PRIDOMKY.length; heroWord.textContent=PRIDOMKY[pi]; }, 3000);
+  setInterval(()=>{ pi=(pi+1)%PRIDOMKY.length; heroWord.textContent=PRIDOMKY[pi]; }, 2200);
 }
 
 /* Theme toggle */
