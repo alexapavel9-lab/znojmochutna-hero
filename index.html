@@ -20,8 +20,8 @@
   --font-mono:'Space Mono', ui-monospace, 'SF Mono', monospace;
 
   --header-h:70px;
-  --max:1360px;
-  --gutter:clamp(20px,5vw,72px);
+  --max:1440px;
+  --gutter:clamp(20px,4vw,56px);
   --radius:14px;
   --radius-lg:22px;
   --ease:cubic-bezier(.2,.7,.2,1);
@@ -81,10 +81,10 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
 /* rotace přídomku (dle brand boardu) */
 @keyframes zchFade{
-  0%{opacity:0;transform:translateY(8px)}
-  14%{opacity:1;transform:translateY(0)}
-  86%{opacity:1}
-  100%{opacity:0;transform:translateY(-6px)}
+  0%{opacity:0}
+  18%{opacity:1}
+  82%{opacity:1}
+  100%{opacity:0}
 }
 
 /* ============================================================
@@ -95,23 +95,25 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
 .wordmark{font-weight:600;font-size:20px;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:.4ch;white-space:nowrap}
 .wordmark b{font-weight:600;color:var(--ink)}
-.wordmark i{font-style:normal;color:var(--mint)}
-.wordmark .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);margin-left:2px}
+.wordmark i{font-style:normal;color:var(--mint);font-family:var(--font-mono);font-weight:400;letter-spacing:-.02em}
 
 .nav{display:flex;gap:4px;margin-inline-start:8px}
-.nav-item{position:relative;padding:10px 14px;border-radius:10px;font-weight:500;font-size:15px;color:var(--ink-dim);display:inline-flex;align-items:center;gap:7px;transition:color .2s var(--ease),background .2s var(--ease)}
+.nav-item{position:relative;padding:10px 14px;border-radius:10px;font-weight:500;font-size:15px;color:var(--ink-dim);display:inline-flex;align-items:center;gap:7px;white-space:nowrap;transition:color .2s var(--ease),background .2s var(--ease)}
 .nav-item:hover,.nav-item[aria-expanded="true"]{color:var(--ink);background:var(--chip)}
 .nav-item .caret{width:8px;height:8px;opacity:.6;transition:transform .25s var(--ease)}
 .nav-item[aria-expanded="true"] .caret{transform:rotate(180deg)}
 
-.tools{margin-inline-start:auto;display:flex;align-items:center;gap:6px}
+.tools{margin-inline-start:auto;display:flex;align-items:center;gap:12px}
+.btn-tickets{font-weight:600;font-size:14px;background:var(--mint);color:#0A3826;padding:10px 18px;border-radius:10px;white-space:nowrap;margin-inline-start:8px;transition:.18s var(--ease)}
+.btn-tickets:hover{background:var(--mint-hi);transform:translateY(-1px)}
+:root[data-theme="light"] .btn-tickets{color:#F0F1EC}
 .icon-btn{height:40px;padding:0 14px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-dim);border:1px solid transparent;transition:.2s var(--ease)}
 .icon-btn:hover{color:var(--ink);background:var(--chip)}
 .icon-btn svg{width:16px;height:16px}
 .lang{display:inline-flex;align-items:center;background:var(--chip);border-radius:10px;padding:3px;gap:2px}
 .lang button{font-family:var(--font-mono);font-size:12px;padding:6px 9px;border-radius:7px;color:var(--ink-dim);letter-spacing:.05em}
 .lang button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink)}
-.theme-toggle{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-dim);transition:.2s var(--ease)}
+.theme-toggle{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-dim);transition:.2s var(--ease)}
 .theme-toggle:hover{color:var(--ink);border-color:var(--ink-dim)}
 .theme-toggle svg{width:17px;height:17px}
 .theme-toggle .sun{display:none}
@@ -156,13 +158,15 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
    HERO — FULLSCREEN
    ============================================================ */
 .hero{position:relative;overflow:hidden;background:var(--bg-hero);min-height:calc(100dvh - var(--header-h));display:flex;flex-direction:column;transition:background .4s var(--ease)}
-.hero-top{max-width:var(--max);margin-inline:auto;width:100%;padding:26px var(--gutter) 0;display:flex;justify-content:space-between}
+.hero>*{position:relative;z-index:1}
+.hero::after{content:"";position:absolute;right:0;bottom:0;z-index:0;pointer-events:none;width:min(52vw,640px);aspect-ratio:1/1;background-color:#072A1B;-webkit-mask:url('https://d8j0ntlcm91z4.cloudfront.net/user_3GXWLoSf8VUy2VnLX6ADv4hh198/hf_20260724_121234_80a8b7c8-01a5-4b5f-873c-fdc635884548.png') no-repeat bottom right/contain;mask:url('https://d8j0ntlcm91z4.cloudfront.net/user_3GXWLoSf8VUy2VnLX6ADv4hh198/hf_20260724_121234_80a8b7c8-01a5-4b5f-873c-fdc635884548.png') no-repeat bottom right/contain;opacity:.9}
+.hero-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:clamp(18px,2.6vw,32px)}
 .hero-inner{max-width:var(--max);margin-inline:auto;width:100%;padding:clamp(24px,3vw,48px) var(--gutter);flex:1;display:flex;flex-direction:column;justify-content:center}
 h1{font-weight:700;letter-spacing:-.03em;line-height:.94;font-size:clamp(38px,6.2vw,88px)}
 h1 .line{display:block}
-h1 .pridomek{display:block;font-family:var(--font-mono);font-weight:400;letter-spacing:-.04em;line-height:1.05;color:var(--mint);font-size:clamp(28px,4.6vw,64px);margin-top:.08em;animation:zchFade 2.2s ease-in-out infinite}
+h1 .pridomek{display:block;font-family:var(--font-mono);font-weight:400;letter-spacing:-.04em;line-height:1;color:var(--mint);font-size:clamp(38px,6.2vw,88px);margin-top:.04em;animation:zchFade 2.2s ease-in-out infinite}
 h1 .pridomek.paused{animation-play-state:paused}
-.lede{margin-top:clamp(24px,3vw,38px);max-width:30ch;font-size:clamp(17px,1.6vw,21px);line-height:1.5;color:var(--ink-dim);font-weight:400}
+.lede{margin-top:clamp(20px,2.4vw,30px);max-width:34ch;font-size:16px;line-height:1.6;color:var(--ink-dim);font-weight:400}
 .hero-actions{margin-top:clamp(28px,3.4vw,40px);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .btn{height:52px;padding:0 26px;border-radius:12px;font-weight:500;font-size:16px;display:inline-flex;align-items:center;gap:10px;transition:.2s var(--ease)}
 .btn-primary{background:var(--mint);color:#0A3826}
@@ -255,7 +259,7 @@ h1 .pridomek.paused{animation-play-state:paused}
    MOBILE
    ============================================================ */
 #mobileNav{display:none}
-@media (max-width:960px){
+@media (max-width:1160px){
   .nav,.tools .icon-btn.search span,.strip-head{display:none}
   .burger{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;color:var(--ink);margin-inline-start:auto}
   .tools{margin-inline-start:0;gap:4px}
@@ -277,11 +281,18 @@ h1 .pridomek.paused{animation-play-state:paused}
   .m-sec .m-body{padding:0 4px 18px;display:flex;flex-direction:column;gap:2px}
   .m-sec .m-body a{padding:9px 0;font-size:16px;color:var(--ink-dim)}
   .m-sec .m-body a:hover{color:var(--mint)}
+  /* utilities uvnitř draweru */
+  .m-tickets{display:block;text-align:center;background:var(--mint);color:#0A3826;font-weight:600;font-size:15px;padding:14px;border-radius:12px;margin:6px 0 18px}
+  :root[data-theme="light"] .m-tickets{color:#F0F1EC}
+  .m-foot{display:flex;align-items:center;gap:12px;padding-top:18px;margin-top:8px;border-top:1px solid var(--line-soft)}
+  .m-theme{margin-inline-start:auto;font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;color:var(--ink-dim);border:1px solid var(--line);padding:10px 14px;border-radius:10px}
 }
 @media (max-width:560px){
   .bar{gap:14px}
-  .hero-actions .chips{margin-inline-start:0;width:100%}
-  .btn{flex:1;justify-content:center}
+  .bar .icon-btn.search,.bar .lang,.bar .theme-toggle,.bar .btn-tickets{display:none}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .hero-actions .chips{width:100%;margin-inline-start:0}
+  .btn{width:100%;justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -290,7 +301,7 @@ h1 .pridomek.paused{animation-play-state:paused}
 
 <header class="site-header" id="header">
   <div class="bar">
-    <a class="wordmark" href="#" aria-label="Znojmo chutná — domů"><b>znojmo</b><i>chutná</i><span class="dot"></span></a>
+    <a class="wordmark" href="#" aria-label="Znojmo chutná — domů"><b>Znojmo</b><i>chutná</i></a>
 
     <nav class="nav" id="nav" aria-label="Hlavní navigace"></nav>
 
@@ -306,6 +317,7 @@ h1 .pridomek.paused{animation-play-state:paused}
         <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
         <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M22 12h-2.5M4.5 12H2M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8M18.4 18.4l-1.8-1.8M7.4 7.4 5.6 5.6"/></svg>
       </button>
+      <a class="btn-tickets" href="#" title="Vstupenky → Program">Vstupenky</a>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
@@ -319,12 +331,11 @@ h1 .pridomek.paused{animation-play-state:paused}
 
 <main>
   <section class="hero">
-    <div class="hero-top">
-      <span class="mono">Znojemská Beseda · Léto 2026</span>
-      <span class="mono">#znojmochutna</span>
-    </div>
-
     <div class="hero-inner">
+      <div class="hero-top">
+        <span class="mono">Znojemská Beseda · Léto 2026</span>
+        <span class="mono">#znojmochutna</span>
+      </div>
       <h1>
         <span class="line">Znojmo chutná</span>
         <span class="pridomek" id="heroWord">létem</span>
@@ -367,7 +378,7 @@ h1 .pridomek.paused{animation-play-state:paused}
   <div class="f-inner">
     <div class="f-top">
       <div class="f-brand">
-        <div class="wordmark"><b>znojmo</b><i>chutná</i><span class="dot"></span></div>
+        <div class="wordmark"><b>Znojmo</b><i>chutná</i></div>
         <p class="f-tagline">Kulturní a turistický portál Znojma. Program, víno, památky i tipy na výlet — na jednom místě.</p>
         <form class="f-news" onsubmit="return false">
           <label class="mono">Newsletter</label>
@@ -425,7 +436,7 @@ const MENU = {
     ],
     action:{t:'Naplánovat cestu za vínem',note:'trasy + sklepy'},
     featured:{theme:'cellar',ghost:'❦',kicker:'Ochutnejte',title:'Sklepní ulička Šatov',meta:'kraj vína · celoročně'} },
-  planovani: { label:'Plánování návštěvy',
+  planovani: { label:'Plánování',
     columns:[
       {title:'Než vyrazíte', links:[{t:'Infocentra (TIC)'},{t:'Doprava & parkování'}]},
       {title:'Vstupenky', links:[{t:'Kde koupit'},{t:'GoOut'},{t:'Kombinované vstupné'}]},
@@ -473,6 +484,13 @@ Object.entries(MENU).forEach(([key,data])=>{
   const links = data.columns.flatMap(c=>c.links).map(l=>`<a href="#">${l.t}</a>`).join('');
   mob.appendChild(el(`<details class="m-sec"><summary>${data.label}<span class="plus">+</span></summary><div class="m-body">${links}${data.action?`<a href="#">${data.action.t} →</a>`:''}</div></details>`));
 });
+
+/* Mobile drawer utilities — Vstupenky nahoře, jazyk + téma dole */
+mob.insertAdjacentHTML('afterbegin', `<a class="m-tickets" href="#">Vstupenky</a>`);
+mob.insertAdjacentHTML('beforeend', `<div class="m-foot">
+  <div class="lang" role="group" aria-label="Jazyk"><button aria-pressed="true">CS</button><button aria-pressed="false">EN</button><button aria-pressed="false">DE</button></div>
+  <button class="m-theme" aria-label="Přepnout světlý / tmavý režim">Tmavý / světlý</button>
+</div>`);
 
 /* Strip cards */
 const stripCards = document.getElementById('stripCards');
@@ -530,6 +548,7 @@ if(heroWord && !matchMedia('(prefers-reduced-motion:reduce)').matches){
 /* Theme toggle */
 const root=document.documentElement;
 document.getElementById('themeToggle').addEventListener('click',()=>{root.dataset.theme = root.dataset.theme==='light'?'dark':'light';});
+document.querySelector('.m-theme')?.addEventListener('click',()=>{root.dataset.theme = root.dataset.theme==='light'?'dark':'light';});
 
 /* Language */
 document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.lang button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');}));
