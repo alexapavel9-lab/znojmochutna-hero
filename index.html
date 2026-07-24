@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="cs" data-theme="dark">
+<html lang="cs" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Znojmo chutná — hero + navigace</title>
+<title>Znojmo chutná — HP (hero · megamenu · rozcestník · footer)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,359 +11,274 @@
 
 <style>
 /* ============================================================
-   Znojmo chutná — design tokens
-   Fonty: Space Grotesk (display) + Space Mono (labels)
-   Dvě témata: dark (signature, dle konceptu v3) + light (cream)
+   Znojmo chutná — tokeny dle Brand Board v3 (závazné hexy)
+   Space Grotesk (logo/nadpisy/text) + Space Mono (přídomky,
+   eyebrow, nav odkazy, čísla). Ostré rohy, 2px inkoustové linky,
+   střídání ploch papír / bílá / zeleň.
    ============================================================ */
 :root{
-  --font-display:'Space Grotesk', system-ui, -apple-system, sans-serif;
-  --font-mono:'Space Mono', ui-monospace, 'SF Mono', monospace;
+  --font:'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --mono:'Space Mono', ui-monospace, 'SF Mono', monospace;
 
-  --max: 1320px;
-  --gutter: clamp(20px, 5vw, 64px);
-  --radius: 14px;
-  --radius-lg: 22px;
-  --ease: cubic-bezier(.2,.7,.2,1);
+  /* paleta (jedna zeleň pro vše) */
+  --green:#0D4630;   /* lesní zeleň — hlavní */
+  --accent:#93D3A2;  /* světlá zeleň — přídomek, akcenty */
+  --ink:#12140F;     /* inkoust — text, 2px linky */
+  --paper:#F0F1EC;   /* papír — světlý podklad */
+  --white:#FFFFFF;
+  --sec:#5C6157;     /* sekundární text na světlé */
+  --muted:#8B8F85;
+
+  /* na zelené ploše */
+  --on-green:#F0F1EC; --on-green-dim:#C3D6C9; --on-green-mono:#8FAE97;
+  --g-line:#1C5238; --g-line-2:#2C5F45;
+
+  --max:1440px;
+  --gutter:clamp(22px, 7vw, 120px);
+  --ease:cubic-bezier(.2,.7,.2,1);
+
+  /* „surface" = světlé sekce, které přepíná téma (rozcestník, mega panel) */
+  --surface:var(--paper); --surface-text:var(--ink); --surface-sec:var(--sec);
+  --surface-line:var(--ink); --surface-hair:#D7D9D0;
+  --card:var(--white); --card-line:#E2E4DC; --card-eyebrow:var(--green);
 }
-
-/* ---- DARK (výchozí, dle prtsc) ---- */
 :root[data-theme="dark"]{
-  --bg:        #0F3A25;
-  --bg-hero:   #103B26;
-  --panel:     #124631;   /* elevovaný povrch mega menu */
-  --panel-2:   #0C3020;
-  --ink:       #F3F5EC;
-  --ink-dim:   #A9C7B6;
-  --mint:      #86C7A2;    /* akcent — „létem" */
-  --mint-hi:   #A6DCBE;
-  --mono:      #5F8C74;
-  --line:      rgba(243,245,236,.12);
-  --line-soft: rgba(243,245,236,.07);
-  --chip:      rgba(243,245,236,.06);
-  --chip-hi:   rgba(243,245,236,.12);
-  --glow:      radial-gradient(120% 90% at 15% 0%, rgba(134,199,162,.16), transparent 60%);
-  --shadow:    0 30px 80px -30px rgba(0,0,0,.6);
-}
-
-/* ---- LIGHT (cream) ---- */
-:root[data-theme="light"]{
-  --bg:        #F1F1E6;
-  --bg-hero:   #F1F1E6;
-  --panel:     #FBFBF3;
-  --panel-2:   #FFFFFF;
-  --ink:       #103A25;
-  --ink-dim:   #4E6E5B;
-  --mint:      #2E8B5C;
-  --mint-hi:   #1F7A4C;
-  --mono:      #6E9080;
-  --line:      rgba(16,58,37,.14);
-  --line-soft: rgba(16,58,37,.08);
-  --chip:      rgba(16,58,37,.05);
-  --chip-hi:   rgba(16,58,37,.10);
-  --glow:      radial-gradient(120% 90% at 15% 0%, rgba(46,139,92,.10), transparent 60%);
-  --shadow:    0 30px 70px -34px rgba(16,58,37,.28);
+  --surface:var(--green); --surface-text:var(--on-green); --surface-sec:var(--on-green-dim);
+  --surface-line:var(--ink); --surface-hair:var(--g-line);
+  --card:#0A3826; --card-line:var(--g-line); --card-eyebrow:var(--accent);
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body{
-  font-family:var(--font-display);
-  background:var(--bg);
-  color:var(--ink);
-  min-height:100vh;
-  transition:background .4s var(--ease), color .4s var(--ease);
-}
+body{font-family:var(--font);background:var(--surface);color:var(--surface-text);min-height:100vh}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
-.mono{
-  font-family:var(--font-mono);
-  text-transform:uppercase;
-  letter-spacing:.14em;
-  font-size:11px;
-  color:var(--mono);
+@keyframes zchFade{
+  0%{opacity:0;transform:translateY(8px)}
+  14%{opacity:1;transform:translateY(0)}
+  86%{opacity:1}
+  100%{opacity:0;transform:translateY(-6px)}
 }
+
+/* mono utility (eyebrow / nav / čísla) */
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+
+/* layout container 7% + max-width */
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+.section-grid{display:grid;grid-template-columns:minmax(150px,200px) minmax(0,1fr);gap:40px;align-items:start}
 
 /* ============================================================
-   HEADER + NAV
+   HEADER (vždy na zelené ploše hero)
    ============================================================ */
-.site-header{
-  position:sticky;top:0;z-index:60;
-  background:color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--line-soft);
-  transition:background .4s var(--ease), border-color .4s var(--ease);
-}
-.bar{
-  max-width:var(--max);margin-inline:auto;
-  padding:0 var(--gutter);
-  height:74px;
-  display:flex;align-items:center;gap:32px;
-}
+.site-header{position:sticky;top:0;z-index:60;background:color-mix(in srgb, var(--green) 88%, transparent);backdrop-filter:blur(12px)}
+.bar{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter);height:70px;display:flex;align-items:center;gap:30px}
 
-/* Wordmark */
-.wordmark{
-  font-weight:600;font-size:20px;letter-spacing:-.01em;
-  display:inline-flex;align-items:center;gap:.4ch;
-  white-space:nowrap;
-}
-.wordmark b{font-weight:600;color:var(--ink)}
-.wordmark i{font-style:normal;color:var(--mint)}
-.wordmark .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);margin-left:2px}
+.wordmark{font-weight:700;font-size:19px;letter-spacing:-.01em;color:var(--on-green);white-space:nowrap}
+.wordmark .pd{font-family:var(--mono);font-weight:400;letter-spacing:-.03em;color:var(--accent);margin-left:.3ch}
 
-/* Primary nav */
-.nav{display:flex;gap:4px;margin-inline-start:8px}
+.nav{display:flex;gap:2px;margin-inline-start:10px}
 .nav-item{
-  position:relative;
-  padding:10px 14px;border-radius:10px;
-  font-weight:500;font-size:15px;color:var(--ink-dim);
-  display:inline-flex;align-items:center;gap:7px;
-  transition:color .2s var(--ease), background .2s var(--ease);
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--on-green-dim);padding:9px 12px;display:inline-flex;align-items:center;gap:7px;
+  transition:color .18s var(--ease);
 }
-.nav-item:hover,.nav-item[aria-expanded="true"]{color:var(--ink);background:var(--chip)}
-.nav-item .caret{width:8px;height:8px;opacity:.6;transition:transform .25s var(--ease)}
+.nav-item:hover,.nav-item[aria-expanded="true"]{color:var(--on-green)}
+.nav-item .caret{width:8px;height:8px;opacity:.7;transition:transform .25s var(--ease)}
 .nav-item[aria-expanded="true"] .caret{transform:rotate(180deg)}
 
-/* Tools (right) */
-.tools{margin-inline-start:auto;display:flex;align-items:center;gap:6px}
-.icon-btn{
-  height:40px;padding:0 14px;border-radius:10px;
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:14px;color:var(--ink-dim);
-  border:1px solid transparent;
-  transition:.2s var(--ease);
+.tools{margin-inline-start:auto;display:flex;align-items:center;gap:8px}
+.btn-tickets{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--accent);color:var(--green);padding:10px 16px;font-weight:700;
+  transition:.18s var(--ease);
 }
-.icon-btn:hover{color:var(--ink);background:var(--chip)}
-.icon-btn svg{width:16px;height:16px}
-.lang{display:inline-flex;align-items:center;background:var(--chip);border-radius:10px;padding:3px;gap:2px}
-.lang button{font-family:var(--font-mono);font-size:12px;padding:6px 9px;border-radius:7px;color:var(--ink-dim);letter-spacing:.05em}
-.lang button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink)}
-.theme-toggle{
-  width:40px;height:40px;border-radius:10px;border:1px solid var(--line);
-  display:grid;place-items:center;color:var(--ink-dim);
-  transition:.2s var(--ease);
-}
-.theme-toggle:hover{color:var(--ink);border-color:var(--ink-dim)}
-.theme-toggle svg{width:17px;height:17px}
-.theme-toggle .sun{display:none}
-:root[data-theme="light"] .theme-toggle .sun{display:block}
-:root[data-theme="light"] .theme-toggle .moon{display:none}
-
-.burger{display:none}
+.btn-tickets:hover{background:#A9E0B7}
+.icon-btn{width:38px;height:38px;display:grid;place-items:center;color:var(--on-green-dim);transition:color .18s var(--ease)}
+.icon-btn:hover{color:var(--on-green)}
+.icon-btn svg{width:17px;height:17px}
+.lang{display:flex;font-family:var(--mono);font-size:11.5px;letter-spacing:.05em}
+.lang button{padding:6px 6px;color:var(--on-green-mono)}
+.lang button[aria-pressed="true"]{color:var(--on-green)}
+.burger{display:none;color:var(--on-green)}
 
 /* ============================================================
-   MEGA MENU
+   MEGA MENU (surface panel — kontrast na zelené hlavičce)
    ============================================================ */
-.mega-wrap{
-  position:absolute;left:0;right:0;top:100%;
-  display:flex;justify-content:center;
-  pointer-events:none;
-  opacity:0;transform:translateY(-10px);
-  transition:opacity .22s var(--ease), transform .22s var(--ease);
-}
+.mega-wrap{position:absolute;left:0;right:0;top:100%;display:flex;justify-content:center;pointer-events:none;opacity:0;transform:translateY(-8px);transition:opacity .2s var(--ease),transform .2s var(--ease)}
 .site-header.open .mega-wrap{opacity:1;transform:none;pointer-events:auto}
 .mega{
   width:min(calc(100% - 2*var(--gutter)), var(--max));
-  margin-top:10px;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow);
-  overflow:hidden;
+  background:var(--surface);color:var(--surface-text);
+  border:2px solid var(--surface-line);border-top:none;box-shadow:0 30px 60px -30px rgba(18,20,15,.4);
 }
-.panel{display:none;grid-template-columns:1fr 1fr 1fr .95fr;gap:0}
+.panel{display:none;grid-template-columns:1fr 1fr 1fr .95fr}
 .panel.active{display:grid}
-.col{
-  padding:26px 26px 30px;
-  border-right:1px solid var(--line-soft);
-  display:flex;flex-direction:column;gap:4px;
-}
-.col-title{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.12em;font-size:10.5px;color:var(--mono);margin-bottom:12px}
-.m-link{
-  padding:9px 10px;margin:0 -10px;border-radius:9px;
-  display:flex;flex-direction:column;gap:1px;
-  transition:background .16s var(--ease);
-}
-.m-link:hover{background:var(--chip)}
-.m-link .t{font-weight:500;font-size:15px;color:var(--ink);display:flex;align-items:center;gap:6px}
-.m-link .d{font-size:12.5px;color:var(--ink-dim)}
-.m-link:hover .t{color:var(--mint-hi)}
-
+.col{padding:26px 26px 30px;border-right:1px solid var(--surface-hair);display:flex;flex-direction:column}
+.col-title{font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;color:var(--card-eyebrow);margin-bottom:14px}
+.m-link{padding:8px 0;display:flex;flex-direction:column;gap:1px;transition:color .15s var(--ease)}
+.m-link .t{font-weight:500;font-size:15px;display:flex;align-items:center;gap:6px}
+.m-link .d{font-family:var(--mono);font-size:11px;color:var(--surface-sec);letter-spacing:.02em}
+.m-link:hover .t{color:var(--green)}
+:root[data-theme="dark"] .m-link:hover .t{color:var(--accent)}
 .col-action{margin-top:auto;padding-top:16px}
-.action-btn{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:12px 14px;border-radius:11px;border:1px dashed var(--line);
-  color:var(--ink);font-weight:500;font-size:14px;width:100%;
-  transition:.18s var(--ease);
-}
-.action-btn:hover{border-color:var(--mint);color:var(--mint-hi);border-style:solid}
-.action-btn small{font-family:var(--font-mono);font-size:10px;color:var(--mono);text-transform:uppercase;letter-spacing:.1em}
-
-/* Featured card (poslední sloupec) */
-.feat{
-  position:relative;padding:24px;border-right:none;
-  display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
-  color:#fff;min-height:250px;isolation:isolate;
-}
-.feat::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.96}
-.feat.wine::before  {background:linear-gradient(150deg,#7a2b48 0%,#3a2b52 46%,#134a30 100%)}
-.feat.map::before   {background:linear-gradient(150deg,#1f6a4a 0%,#14503a 55%,#0c3324 100%)}
-.feat.cellar::before{background:linear-gradient(150deg,#5a3a1f 0%,#3f3a24 45%,#123a26 100%)}
-.feat.plan::before  {background:linear-gradient(150deg,#1c5e63 0%,#164a44 52%,#0e3a2c 100%)}
-.feat .ghost{position:absolute;right:-12px;top:-24px;font-size:150px;line-height:1;font-weight:700;color:rgba(255,255,255,.08);z-index:-1;letter-spacing:-.04em}
-.feat .kicker{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.12em;font-size:10px;color:rgba(255,255,255,.72)}
+.action-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--surface-line);font-weight:500;font-size:14px;width:100%;transition:.16s var(--ease)}
+.action-btn:hover{background:var(--surface-line);color:var(--surface)}
+.action-btn small{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;opacity:.7}
+/* featured = inkoustový blok (kontrast na papíru i zeleni) */
+.feat{background:var(--ink);color:var(--on-green);padding:24px;border-right:none;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;min-height:250px}
+.feat .kicker{font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;font-size:10px;color:var(--accent)}
 .feat .f-title{font-size:22px;font-weight:600;line-height:1.1;letter-spacing:-.01em}
-.feat .f-meta{font-size:12.5px;color:rgba(255,255,255,.8);font-family:var(--font-mono)}
-.feat .f-go{margin-top:10px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:7px}
+.feat .f-meta{font-family:var(--mono);font-size:12px;color:rgba(240,241,236,.7)}
+.feat .f-go{margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--accent);display:inline-flex;gap:7px;transition:gap .2s var(--ease)}
 .feat:hover .f-go{gap:11px}
-.feat .f-go{transition:gap .2s var(--ease)}
 
 /* ============================================================
-   HERO
+   HERO — typografická verze v barvě (lesní zeleň)
    ============================================================ */
-.hero{
-  position:relative;overflow:hidden;
-  background:var(--bg-hero);
-  background-image:var(--glow);
-  transition:background .4s var(--ease);
+.hero{background:var(--green);color:var(--on-green);border-bottom:2px solid var(--ink);position:relative;overflow:hidden}
+.hero-inner{max-width:var(--max);margin-inline:auto;padding:clamp(48px,7vw,92px) var(--gutter) clamp(40px,5vw,64px)}
+.hero .eyebrow{color:var(--accent);margin-bottom:22px}
+.hero h1{font-weight:700;font-size:clamp(40px,7vw,92px);letter-spacing:-.03em;line-height:.98}
+.hero .pridomek{
+  display:block;font-family:var(--mono);font-weight:400;
+  font-size:clamp(32px,5.4vw,76px);letter-spacing:-.05em;line-height:1.02;color:var(--accent);
+  margin-top:4px;animation:zchFade 3s ease-in-out infinite;
 }
-.hero-labels{
-  max-width:var(--max);margin-inline:auto;
-  padding:22px var(--gutter) 0;
-  display:flex;justify-content:space-between;
-}
-.hero-inner{
-  max-width:var(--max);margin-inline:auto;
-  padding:clamp(40px,7vw,86px) var(--gutter) 0;
-}
-h1{
-  font-weight:700;letter-spacing:-.035em;line-height:.92;
-  font-size:clamp(56px, 12vw, 168px);
-}
-h1 .line{display:block}
-h1 .accent{color:var(--mint)}
-.lede{
-  margin-top:clamp(24px,3.4vw,40px);
-  max-width:30ch;
-  font-size:clamp(17px,1.6vw,21px);
-  line-height:1.5;color:var(--ink-dim);font-weight:400;
-}
-.hero-actions{margin-top:32px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.btn{
-  height:52px;padding:0 26px;border-radius:12px;
-  font-weight:500;font-size:16px;
-  display:inline-flex;align-items:center;gap:10px;
-  transition:.2s var(--ease);
-}
-.btn-primary{background:var(--mint);color:#0C3020}
-.btn-primary:hover{background:var(--mint-hi);transform:translateY(-2px)}
-:root[data-theme="light"] .btn-primary{color:#F3F5EC}
-.btn-ghost{border:1px solid var(--line);color:var(--ink)}
-.btn-ghost:hover{border-color:var(--ink-dim);background:var(--chip)}
-.chips{display:inline-flex;gap:8px;margin-inline-start:6px}
-.chip{
-  font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;
-  padding:9px 15px;border-radius:999px;background:var(--chip);color:var(--ink-dim);
-  border:1px solid transparent;transition:.18s var(--ease);
-}
-.chip:hover{background:var(--chip-hi);color:var(--ink)}
-.chip::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mint);margin-right:8px;vertical-align:middle}
+.hero .pridomek.paused{animation-play-state:paused}
+.hero .lede{margin-top:26px;max-width:480px;font-size:clamp(15.5px,1.6vw,18px);line-height:1.6;color:var(--on-green-dim)}
 
-/* „Nenechte si ujít" pás akcí */
-.strip{
-  max-width:var(--max);margin:clamp(48px,6vw,80px) auto 0;
-  padding:22px var(--gutter) clamp(28px,4vw,44px);
-  border-top:1px solid var(--line-soft);
-  display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;
+/* přídomky jako navigace/filtr */
+.ochutnej{margin-top:34px;display:flex;align-items:center;gap:10px 9px;flex-wrap:wrap}
+.ochutnej .label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--on-green-mono);margin-right:2px}
+.pill{
+  font-family:var(--mono);font-size:12px;letter-spacing:.01em;
+  padding:8px 16px;border-radius:999px;border:1.5px solid var(--g-line-2);color:var(--on-green-dim);
+  transition:.16s var(--ease);
 }
-.strip-head{display:flex;flex-direction:column;gap:6px;padding-top:4px;white-space:nowrap}
-.strip-head .h{font-weight:600;font-size:15px}
-.strip-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.ecard{
-  border:1px solid var(--line);border-radius:var(--radius);
-  padding:16px 16px 18px;display:flex;flex-direction:column;gap:10px;
-  transition:.2s var(--ease);background:var(--chip);
-}
-.ecard:hover{border-color:var(--ink-dim);transform:translateY(-3px)}
-.ecard .cat{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--mint)}
-.ecard .et{font-weight:600;font-size:16.5px;line-height:1.18;letter-spacing:-.01em}
-.ecard .em{font-family:var(--font-mono);font-size:12px;color:var(--ink-dim);margin-top:auto}
+.pill:hover{border-color:var(--accent);color:var(--on-green)}
+.pill[aria-pressed="true"]{background:var(--accent);color:var(--green);border-color:var(--accent);font-weight:700}
+.hero-foot{max-width:var(--max);margin-inline:auto;padding:0 var(--gutter) clamp(28px,4vw,44px);display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.hero-foot a{font-family:var(--mono);font-size:12px;color:var(--on-green-dim);display:inline-flex;gap:8px;transition:.18s var(--ease)}
+.hero-foot a:hover{color:var(--on-green);gap:12px}
+.hero-foot .hash{font-family:var(--mono);font-size:13px;color:var(--on-green-mono)}
 
-/* Scrim za otevřeným mega menu */
-.scrim{
-  position:fixed;inset:74px 0 0;z-index:40;
-  background:rgba(0,0,0,.28);opacity:0;pointer-events:none;
-  transition:opacity .25s var(--ease);
+/* ============================================================
+   ROZCESTNÍK — surface (papír/zeleň dle tématu), ostré karty
+   ============================================================ */
+.rozcestnik{background:var(--surface);color:var(--surface-text)}
+.rozcestnik .wrap{padding-block:clamp(56px,8vw,100px)}
+.roz-head h2{font-weight:600;font-size:clamp(28px,3.4vw,46px);letter-spacing:-.02em;line-height:1.12;max-width:16ch}
+.roz-head h2 em{font-style:normal;color:var(--green)}
+:root[data-theme="dark"] .roz-head h2 em{color:var(--accent)}
+.roz-head .sub{margin-top:16px;color:var(--surface-sec);max-width:44ch;font-size:15.5px;line-height:1.6}
+.roz-grid{margin-top:clamp(30px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.tile{
+  position:relative;display:flex;flex-direction:column;overflow:hidden;
+  padding:26px;min-height:230px;background:var(--card);border:1px solid var(--card-line);
+  transition:transform .26s var(--ease),border-color .26s var(--ease);
 }
+.tile:hover{transform:translateY(-4px);border-color:var(--surface-line)}
+.tile .t-top{display:flex;align-items:center;justify-content:space-between}
+.tile .idx{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.tile .t-arrow{color:var(--surface-sec);transition:.25s var(--ease)}
+.tile:hover .t-arrow{color:var(--green);transform:translate(4px,-4px)}
+:root[data-theme="dark"] .tile:hover .t-arrow{color:var(--accent)}
+.tile .t-tag{font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;font-size:10px;color:var(--card-eyebrow);margin-top:20px}
+.tile h3{font-weight:600;font-size:clamp(22px,2.4vw,29px);letter-spacing:-.02em;margin-top:6px}
+.tile h3 .t-head{color:inherit}
+.tile h3 .t-head::after{content:"";position:absolute;inset:0;z-index:1}
+.tile .t-desc{color:var(--surface-sec);font-size:14px;line-height:1.5;margin-top:10px;max-width:34ch}
+.tile .t-links{position:relative;z-index:2;margin-top:auto;padding-top:20px;display:flex;flex-wrap:wrap;gap:6px}
+.tile .t-links a{font-family:var(--mono);font-size:11px;padding:5px 10px;border:1px solid var(--card-line);color:var(--surface-sec);transition:.15s var(--ease)}
+.tile .t-links a:hover{border-color:var(--surface-line);color:var(--surface-text)}
+.tile::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.tile:hover::after{transform:scaleX(1)}
+
+/* ============================================================
+   FOOTER — brand anchor (inkoust)
+   ============================================================ */
+.site-footer{background:var(--ink);color:var(--on-green);border-top:2px solid var(--ink)}
+.f-inner{max-width:var(--max);margin-inline:auto;padding:clamp(48px,6vw,80px) var(--gutter) 0}
+.f-top{display:grid;grid-template-columns:1.35fr 2.65fr;gap:clamp(32px,4vw,56px);padding-bottom:44px;border-bottom:1px solid rgba(240,241,236,.13)}
+.f-brand .wordmark{font-size:22px;margin-bottom:16px}
+.f-tagline{color:#A8AB9F;font-size:15px;line-height:1.6;max-width:34ch;margin-bottom:24px}
+.f-news .mono{display:block;color:var(--accent);margin-bottom:9px}
+.f-news-row{display:flex;gap:8px;max-width:340px}
+.f-news input{flex:1;height:46px;padding:0 14px;border:1px solid rgba(240,241,236,.18);background:rgba(240,241,236,.04);color:var(--on-green);font:inherit;font-size:14px}
+.f-news input::placeholder{color:#8B8F85}
+.f-news input:focus{outline:none;border-color:var(--accent)}
+.f-news button{width:46px;height:46px;background:var(--accent);color:var(--green);display:grid;place-items:center;flex:none;transition:.18s var(--ease)}
+.f-news button:hover{background:#A9E0B7}
+.f-news .hint{color:#8B8F85;font-family:var(--mono);font-size:11px;margin-top:10px;letter-spacing:.02em}
+.f-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:24px}
+.f-col h4{font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;color:var(--accent);margin-bottom:13px}
+.f-col a{display:block;padding:6px 0;color:#A8AB9F;font-size:14px;transition:color .15s var(--ease)}
+.f-col a:hover{color:var(--on-green)}
+.f-bottom{max-width:var(--max);margin-inline:auto;padding:22px var(--gutter);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.f-legal{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;letter-spacing:.02em}
+.f-legal .c,.f-legal a{color:#8B8F85}
+.f-legal a:hover{color:var(--on-green)}
+.f-social{display:flex;gap:8px}
+.f-social a{width:38px;height:38px;border:1px solid rgba(240,241,236,.15);display:grid;place-items:center;color:#A8AB9F;transition:.18s var(--ease)}
+.f-social a:hover{color:var(--on-green);border-color:#8B8F85}
+.f-social svg{width:16px;height:16px}
+
+/* scrim */
+.scrim{position:fixed;inset:70px 0 0;z-index:40;background:rgba(18,20,15,.32);opacity:0;pointer-events:none;transition:opacity .25s var(--ease)}
 .site-header.open ~ .scrim{opacity:1}
 
 /* ============================================================
    MOBILE
    ============================================================ */
 #mobileNav{display:none}
-@media (max-width:960px){
-  .nav,.tools .icon-btn.search span,.strip-head{display:none}
-  .burger{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;color:var(--ink);margin-inline-start:auto}
-  .tools{margin-inline-start:0;gap:4px}
+@media (max-width:1000px){
+  .nav,.lang,.hero-foot a .full{display:none}
+  .burger{display:grid;place-items:center;width:40px;height:40px}
+  .tools{margin-inline-start:auto}
   .mega-wrap{display:none}
-  .strip{grid-template-columns:1fr}
-  .strip-cards{grid-template-columns:1fr}
-
+  .f-top{grid-template-columns:1fr;gap:36px}
+  .f-bottom{flex-direction:column;align-items:flex-start}
   #mobileNav{
-    position:fixed;inset:74px 0 0;z-index:55;display:block;
-    background:var(--bg);padding:14px var(--gutter) 40px;
-    overflow-y:auto;transform:translateY(-8px);opacity:0;pointer-events:none;
-    transition:.25s var(--ease);
+    position:fixed;inset:70px 0 0;z-index:55;display:block;background:var(--green);color:var(--on-green);
+    padding:12px var(--gutter) 40px;overflow-y:auto;transform:translateY(-8px);opacity:0;pointer-events:none;transition:.25s var(--ease);
   }
   body.nav-open #mobileNav{transform:none;opacity:1;pointer-events:auto}
   body.nav-open{overflow:hidden}
-  .m-sec{border-bottom:1px solid var(--line-soft)}
-  .m-sec>summary{
-    list-style:none;cursor:pointer;padding:18px 4px;
-    font-size:20px;font-weight:600;letter-spacing:-.01em;
-    display:flex;align-items:center;justify-content:space-between;
-  }
+  .m-sec{border-bottom:1px solid var(--g-line)}
+  .m-sec>summary{list-style:none;cursor:pointer;padding:18px 2px;font-family:var(--mono);font-size:14px;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;justify-content:space-between}
   .m-sec>summary::-webkit-details-marker{display:none}
-  .m-sec>summary .plus{color:var(--mint);font-weight:400;transition:transform .2s var(--ease)}
+  .m-sec>summary .plus{color:var(--accent)}
   .m-sec[open]>summary .plus{transform:rotate(45deg)}
-  .m-sec .m-body{padding:0 4px 18px;display:flex;flex-direction:column;gap:2px}
-  .m-sec .m-body a{padding:9px 0;font-size:16px;color:var(--ink-dim)}
-  .m-sec .m-body a:hover{color:var(--mint)}
+  .m-sec .m-body{padding:0 2px 16px;display:flex;flex-direction:column}
+  .m-sec .m-body a{padding:8px 0;font-size:16px;color:var(--on-green-dim)}
 }
-@media (max-width:560px){
-  .bar{gap:14px}
-  .hero-actions .chips{margin-inline-start:0;width:100%}
-  .btn{flex:1;justify-content:center}
-}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:560px){.bar{gap:14px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
 <header class="site-header" id="header">
   <div class="bar">
-    <a class="wordmark" href="#" aria-label="Znojmo chutná — domů">
-      <b>znojmo</b><i>chutná</i><span class="dot"></span>
-    </a>
+    <a class="wordmark" href="#" aria-label="Znojmo chutná — domů">Znojmo chutná</a>
 
     <nav class="nav" id="nav" aria-label="Hlavní navigace"></nav>
 
     <div class="tools">
-      <button class="icon-btn search" aria-label="Hledat">
+      <a class="btn-tickets" href="#">Vstupenky</a>
+      <button class="icon-btn" aria-label="Hledat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <span>Hledat</span>
       </button>
       <div class="lang" role="group" aria-label="Jazyk">
-        <button aria-pressed="true">CS</button>
-        <button aria-pressed="false">EN</button>
-        <button aria-pressed="false">DE</button>
+        <button aria-pressed="true">CS</button><button aria-pressed="false">EN</button><button aria-pressed="false">DE</button>
       </div>
-      <button class="theme-toggle" id="themeToggle" aria-label="Přepnout světlý / tmavý režim">
+      <button class="icon-btn" id="themeToggle" aria-label="Světlý / tmavý režim">
         <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
-        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M22 12h-2.5M4.5 12H2M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8M18.4 18.4l-1.8-1.8M7.4 7.4 5.6 5.6"/></svg>
       </button>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
     </div>
   </div>
@@ -373,247 +288,239 @@ h1 .accent{color:var(--mint)}
 
 <div class="scrim" id="scrim"></div>
 
-<main class="hero">
-  <div class="hero-labels">
-    <span class="mono">Znojemská Beseda · Léto 2026</span>
-    <span class="mono">#znojmochutna</span>
-  </div>
+<main>
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Co dnes chutná?</div>
+      <h1>Znojmo chutná<span class="pridomek" id="heroWord">létem</span></h1>
+      <p class="lede">Jedna věta, celé město. Vyberte si chuť — program, místa i příběhy se seřadí podle ní.</p>
 
-  <div class="hero-inner">
-    <h1>
-      <span class="line">Znojmo chutná</span>
-      <span class="line accent">létem</span>
-    </h1>
-    <p class="lede">Program, víno, památky i tipy na výlet — celé menu města na jednom místě.</p>
-
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#">Prohlédnout program
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a class="btn btn-ghost" href="#">Objevit Znojmo</a>
-      <span class="chips">
-        <button class="chip">Dnes</button>
-        <button class="chip">Tento víkend</button>
-      </span>
+      <div class="ochutnej" id="ochutnej" role="group" aria-label="Vyber chuť">
+        <span class="label">Ochutnej:</span>
+      </div>
     </div>
-  </div>
 
-  <section class="strip" aria-label="Nenechte si ujít">
-    <div class="strip-head">
-      <span class="mono">Právě teď</span>
-      <span class="h">Nenechte si ujít</span>
+    <div class="hero-foot">
+      <a href="#">Prohlédnout celý program <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <span class="hash">#znojmochutna</span>
     </div>
-    <div class="strip-cards" id="stripCards"></div>
+  </section>
+
+  <section class="rozcestnik">
+    <div class="wrap section-grid">
+      <div class="eyebrow">(01) Rozcestník</div>
+      <div>
+        <div class="roz-head">
+          <h2>Celé <em>menu</em> města</h2>
+          <p class="sub">Čtyři vstupy do všeho, co ve Znojmě stojí za ochutnání. Vyberte si chod.</p>
+        </div>
+        <div class="roz-grid" id="rozGrid"></div>
+      </div>
+    </div>
   </section>
 </main>
+
+<footer class="site-footer">
+  <div class="f-inner">
+    <div class="f-top">
+      <div class="f-brand">
+        <div class="wordmark">Znojmo chutná</div>
+        <p class="f-tagline">Kulturní a turistický portál Znojma. Program, víno, památky i tipy na výlet — na jednom místě.</p>
+        <form class="f-news" onsubmit="return false">
+          <span class="mono">Newsletter</span>
+          <div class="f-news-row">
+            <input type="email" placeholder="Váš e-mail" aria-label="E-mail">
+            <button aria-label="Přihlásit"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+          <p class="hint">Tipy na akce jednou týdně. Kdykoli lze odhlásit.</p>
+        </form>
+      </div>
+      <div class="f-cols" id="footCols"></div>
+    </div>
+  </div>
+  <div class="f-bottom">
+    <div class="f-legal">
+      <span class="c">© 2026 Znojemská Beseda</span>
+      <a href="#">Ochrana údajů</a><a href="#">Přístupnost</a><a href="#">Cookies</a>
+    </div>
+    <div class="f-social">
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h-3a4 4 0 0 0-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/></svg></a>
+      <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none"/></svg></a>
+    </div>
+  </div>
+</footer>
 
 <nav id="mobileNav" aria-label="Mobilní navigace"></nav>
 
 <script>
 /* ============================================================
-   MENU — jeden zdroj dat pro desktop mega i mobilní accordion
-   (data-shaped: odpovídá sekcím z Architektura-stranek.md)
+   Data (data-shaped): jeden zdroj pro mega, mobil i footer
+   Sekce dle Architektura-stranek.md
    ============================================================ */
 const MENU = {
-  program: {
-    label:'Program', tag:'Co se děje',
+  program: { label:'Program',
     columns:[
-      {title:'Přehled', links:[
-        {t:'Všechny akce', d:'seznam · kalendář · mapa'},
-        {t:'Kalendář'},
-        {t:'Mapa akcí'},
-      ]},
-      {title:'Kategorie', links:[
-        {t:'Divadlo'}, {t:'Koncerty'}, {t:'Festivaly'}, {t:'Víno'}, {t:'Pro rodiny'},
-        {t:'Všech 16 kategorií', arrow:true},
-      ]},
-      {title:'Kampaně', links:[
-        {t:'Znojemské vinobraní'}, {t:'Kulturní léto'}, {t:'Advent'},
-      ]},
+      {title:'Přehled', links:[{t:'Všechny akce',d:'seznam · kalendář · mapa'},{t:'Kalendář'},{t:'Mapa akcí'}]},
+      {title:'Kategorie', links:[{t:'Divadlo'},{t:'Koncerty'},{t:'Festivaly'},{t:'Víno'},{t:'Pro rodiny'},{t:'Všech 16 kategorií',arrow:true}]},
+      {title:'Kampaně', links:[{t:'Znojemské vinobraní'},{t:'Kulturní léto'},{t:'Advent'}]},
     ],
-    action:{t:'Přidat akci', note:'pro pořadatele'},
-    featured:{theme:'wine', ghost:'♦', kicker:'Nenechte si ujít', title:'Znojemské vinobraní 2026', meta:'12.–14. 9. · centrum'},
-  },
-  objevuj: {
-    label:'Objevuj Znojmo', tag:'Místa · mapa · trasy',
+    action:{t:'Přidat akci',note:'pro pořadatele'},
+    featured:{kicker:'Nenechte si ujít',title:'Znojemské vinobraní 2026',meta:'11.–13. 9. · centrum'} },
+  objevuj: { label:'Objevuj Znojmo',
     columns:[
-      {title:'Místa & památky', links:[
-        {t:'Divadlo'}, {t:'Jízdárna'}, {t:'Louka'}, {t:'Radniční věž'},
-        {t:'Znojemské podzemí'}, {t:'Expozice pivovarnictví'},
-      ]},
-      {title:'Mapa & trasy', links:[
-        {t:'Mapa zájmů', d:'8–12 vrstev'}, {t:'Pěší trasy'}, {t:'Cyklotrasy'},
-        {t:'NP Podyjí'}, {t:'Vodáctví na Dyji'},
-      ]},
-      {title:'Tematické', links:[
-        {t:'Znojmo s dětmi'}, {t:'Prohlídky s průvodcem'}, {t:'Vyhlídky & POI'},
-      ]},
+      {title:'Místa & památky', links:[{t:'Divadlo'},{t:'Jízdárna'},{t:'Louka'},{t:'Radniční věž'},{t:'Znojemské podzemí'},{t:'Expozice pivovarnictví'}]},
+      {title:'Mapa & trasy', links:[{t:'Mapa zájmů',d:'8–12 vrstev'},{t:'Pěší trasy'},{t:'Cyklotrasy'},{t:'NP Podyjí'},{t:'Vodáctví na Dyji'}]},
+      {title:'Tematické', links:[{t:'Znojmo s dětmi'},{t:'Prohlídky s průvodcem'},{t:'Vyhlídky & POI'}]},
     ],
-    action:{t:'Otevřít mapu', note:'body zájmu'},
-    featured:{theme:'map', ghost:'▲', kicker:'Výhled', title:'Radniční věž', meta:'80 m · panorama města'},
-  },
-  vino: {
-    label:'Víno & sklepy', tag:'Jádro značky',
+    action:{t:'Otevřít mapu',note:'body zájmu'},
+    featured:{kicker:'Výhled',title:'Radniční věž',meta:'80 m · panorama'} },
+  vino: { label:'Víno & sklepy',
     columns:[
-      {title:'Sekce', links:[
-        {t:'Víno & sklepy', d:'landing'}, {t:'Adresář sklepů'}, {t:'Vinařské akce'},
-      ]},
-      {title:'Sklepní uličky', links:[
-        {t:'Šatov'}, {t:'Nový Šaldorf'},
-      ]},
-      {title:'Za vínem', links:[
-        {t:'Vinařské trasy'}, {t:'Degustace'}, {t:'Vinobraní'},
-      ]},
+      {title:'Sekce', links:[{t:'Víno & sklepy',d:'landing'},{t:'Adresář sklepů'},{t:'Vinařské akce'}]},
+      {title:'Sklepní uličky', links:[{t:'Šatov'},{t:'Nový Šaldorf'}]},
+      {title:'Za vínem', links:[{t:'Vinařské trasy'},{t:'Degustace'},{t:'Vinobraní'}]},
     ],
-    action:{t:'Naplánovat cestu za vínem', note:'trasy + sklepy'},
-    featured:{theme:'cellar', ghost:'❦', kicker:'Ochutnejte', title:'Sklepní ulička Šatov', meta:'kraj vína · celoročně'},
-  },
-  planovani: {
-    label:'Plánování návštěvy', tag:'Praktické',
+    action:{t:'Naplánovat cestu za vínem',note:'trasy + sklepy'},
+    featured:{kicker:'Ochutnejte',title:'Sklepní ulička Šatov',meta:'kraj vína · celoročně'} },
+  planovani: { label:'Plánování',
     columns:[
-      {title:'Než vyrazíte', links:[
-        {t:'Infocentra (TIC)'}, {t:'Doprava & parkování'},
-      ]},
-      {title:'Vstupenky', links:[
-        {t:'Kde koupit'}, {t:'GoOut'}, {t:'Kombinované vstupné'},
-      ]},
-      {title:'Ke stažení', links:[
-        {t:'Mapy'}, {t:'Průvodci'}, {t:'Programy (PDF)'},
-      ]},
+      {title:'Než vyrazíte', links:[{t:'Infocentra (TIC)'},{t:'Doprava & parkování'}]},
+      {title:'Vstupenky', links:[{t:'Kde koupit'},{t:'GoOut'},{t:'Kombinované vstupné'}]},
+      {title:'Ke stažení', links:[{t:'Mapy'},{t:'Průvodci'},{t:'Programy (PDF)'}]},
     ],
-    action:{t:'Naplánuj si den', note:'wizard'},
-    featured:{theme:'plan', ghost:'✳', kicker:'Newsletter', title:'Co se ve Znojmě chystá', meta:'tipy jednou týdně'},
-  },
+    action:{t:'Naplánuj si den',note:'wizard'},
+    featured:{kicker:'Newsletter',title:'Co se ve Znojmě chystá',meta:'tipy jednou týdně'} },
 };
 
-/* události pro „Nenechte si ujít" pás */
-const STRIP = [
-  {cat:'Festival', t:'Znojemské vinobraní', m:'12.–14. 9.'},
-  {cat:'Divadlo',  t:'Léto na nádvoří Domu umění', m:'Dnes · 20:00'},
-  {cat:'Koncert',  t:'Kulturní léto: Podyjí Sessions', m:'So · 19:30'},
+/* přídomky (rotace + navigace/filtr); goto → cíl v IA */
+const PRIDOMKY = [
+  {w:'vínem', goto:'vino'}, {w:'divadlem', goto:'program'}, {w:'historií', goto:'objevuj'},
+  {w:'létem', goto:'program'}, {w:'adventem', goto:'program'}, {w:'objevováním', goto:'objevuj'},
+  {w:'pohybem', goto:'objevuj'}, {w:'hudbou', goto:'program'}, {w:'výhledem', goto:'objevuj'},
+];
+
+const PILLARS = [
+  {key:'program',   idx:'01', tag:'Co se děje',        label:'Program',       desc:'Jednotný kalendář akcí celého Znojemska — divadlo, koncerty, festivaly, víno.', links:['Dnes & víkend','Kalendář','Přidat akci']},
+  {key:'objevuj',   idx:'02', tag:'Místa · mapa · trasy', label:'Objevuj Znojmo', desc:'Provozy a památky, interaktivní mapa zájmů, pěší a cyklo trasy s GPX.',        links:['Radniční věž','Mapa zájmů','NP Podyjí']},
+  {key:'vino',      idx:'03', tag:'Jádro značky',      label:'Víno & sklepy',  desc:'Sklepní uličky Šatov a Nový Šaldorf, adresář sklepů, vinařské akce a trasy.',  links:['Sklepní uličky','Vinařské akce','Za vínem']},
+  {key:'planovani', idx:'04', tag:'Praktické',         label:'Plánování',      desc:'Doprava a parkování, kde koupit vstupenky, mapy a průvodci ke stažení.',        links:['Doprava','Vstupenky','Ke stažení']},
 ];
 
 /* ---- render helpers ---- */
-const el = (html)=>{const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild;};
-const arrow = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+const el = (h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstElementChild;};
+const arrow = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+const arrowBig = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
 
-/* Desktop: nav triggers + mega panels */
+/* Nav triggers + mega panels */
 const nav = document.getElementById('nav');
 const mega = document.getElementById('mega');
 Object.entries(MENU).forEach(([key,data])=>{
-  nav.appendChild(el(`
-    <button class="nav-item" data-menu="${key}" aria-haspopup="true" aria-expanded="false">
-      ${data.label}
-      <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
-    </button>`));
-
-  const cols = data.columns.map(c=>`
+  nav.appendChild(el(`<button class="nav-item" data-menu="${key}" aria-haspopup="true" aria-expanded="false">${data.label}<svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg></button>`));
+  const cols = data.columns.map((c,ci)=>`
     <div class="col">
       <div class="col-title">${c.title}</div>
-      ${c.links.map(l=>`
-        <a class="m-link" href="#">
-          <span class="t">${l.t}${l.arrow?arrow:''}</span>
-          ${l.d?`<span class="d">${l.d}</span>`:''}
-        </a>`).join('')}
-      ${c===data.columns[data.columns.length-1] && data.action?`
-        <div class="col-action">
-          <a class="action-btn" href="#">
-            <span>${data.action.t}</span>
-            <small>${data.action.note}</small>
-          </a>
-        </div>`:''}
+      ${c.links.map(l=>`<a class="m-link" href="#"><span class="t">${l.t}${l.arrow?arrow:''}</span>${l.d?`<span class="d">${l.d}</span>`:''}</a>`).join('')}
+      ${ci===data.columns.length-1 && data.action?`<div class="col-action"><a class="action-btn" href="#"><span>${data.action.t}</span><small>${data.action.note}</small></a></div>`:''}
     </div>`).join('');
-
-  const f = data.featured;
-  const feat = `
-    <a class="col feat ${f.theme}" href="#">
-      <span class="ghost">${f.ghost}</span>
-      <span class="kicker">${f.kicker}</span>
-      <span class="f-title">${f.title}</span>
-      <span class="f-meta">${f.meta}</span>
-      <span class="f-go">Zobrazit ${arrow}</span>
-    </a>`;
-
-  mega.appendChild(el(`<div class="panel" data-panel="${key}">${cols}${feat}</div>`));
+  const f=data.featured;
+  mega.appendChild(el(`<div class="panel" data-panel="${key}">${cols}<a class="col feat" href="#"><span class="kicker">${f.kicker}</span><span class="f-title">${f.title}</span><span class="f-meta">${f.meta}</span><span class="f-go">Zobrazit ${arrow}</span></a></div>`));
 });
 
-/* Mobile accordion (ze stejných dat) */
+/* Mobile accordion */
 const mob = document.getElementById('mobileNav');
 Object.entries(MENU).forEach(([key,data])=>{
   const links = data.columns.flatMap(c=>c.links).map(l=>`<a href="#">${l.t}</a>`).join('');
-  mob.appendChild(el(`
-    <details class="m-sec">
-      <summary>${data.label}<span class="plus">+</span></summary>
-      <div class="m-body">${links}${data.action?`<a href="#">${data.action.t} →</a>`:''}</div>
-    </details>`));
+  mob.appendChild(el(`<details class="m-sec"><summary>${data.label}<span class="plus">+</span></summary><div class="m-body">${links}${data.action?`<a href="#">${data.action.t} →</a>`:''}</div></details>`));
 });
 
-/* Strip cards */
-const stripCards = document.getElementById('stripCards');
-STRIP.forEach(e=>stripCards.appendChild(el(`
-  <a class="ecard" href="#">
-    <span class="cat">${e.cat}</span>
-    <span class="et">${e.t}</span>
-    <span class="em">${e.m}</span>
-  </a>`)));
+/* Přídomky pills */
+const ochutnej = document.getElementById('ochutnej');
+PRIDOMKY.forEach((p,i)=>ochutnej.appendChild(el(`<button class="pill" data-i="${i}" aria-pressed="false">${p.w}</button>`)));
+
+/* Rozcestník tiles */
+const rozGrid = document.getElementById('rozGrid');
+PILLARS.forEach(p=>rozGrid.appendChild(el(`
+  <article class="tile" data-key="${p.key}">
+    <div class="t-top"><span class="idx">${p.idx}</span><span class="t-arrow">${arrowBig}</span></div>
+    <span class="t-tag">${p.tag}</span>
+    <h3><a class="t-head" href="#">${p.label}</a></h3>
+    <p class="t-desc">${p.desc}</p>
+    <div class="t-links">${p.links.map(l=>`<a href="#">${l}</a>`).join('')}</div>
+  </article>`)));
+
+/* Footer columns (4 z MENU + org agenda) */
+const footCols = document.getElementById('footCols');
+Object.entries(MENU).forEach(([key,data])=>{
+  const links = data.columns.flatMap(c=>c.links).slice(0,4).map(l=>`<a href="#">${l.t}</a>`).join('');
+  footCols.appendChild(el(`<div class="f-col"><h4>${data.label}</h4>${links}</div>`));
+});
+footCols.appendChild(el(`<div class="f-col"><h4>Znojemská Beseda</h4><a href="#">Profil organizace</a><a href="#">Pronájmy prostor</a><a href="#">Kariéra</a><a href="#">Press &amp; novinky</a><a href="#">Kontakty</a></div>`));
 
 /* ============================================================
-   Interakce: mega menu (hover + focus + click + Esc)
+   Rotace přídomku (3 s, fade) — pauza při výběru pill
+   ============================================================ */
+const heroWord = document.getElementById('heroWord');
+const pills = [...document.querySelectorAll('.pill')];
+const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+let rot = 0, rotTimer = null, locked = false;
+
+function showWord(i){ heroWord.textContent = PRIDOMKY[i].w; }
+function startRotation(){
+  if(reduce || rotTimer) return;
+  rotTimer = setInterval(()=>{ rot=(rot+1)%PRIDOMKY.length; showWord(rot); }, 3000);
+  heroWord.classList.remove('paused');
+}
+function stopRotation(){ clearInterval(rotTimer); rotTimer=null; heroWord.classList.add('paused'); }
+
+pills.forEach(p=>{
+  p.addEventListener('click',()=>{
+    const i = +p.dataset.i;
+    if(locked && pills[i].getAttribute('aria-pressed')==='true'){
+      // klik na aktivní přídomek → zpět na rotaci
+      locked=false; pills.forEach(x=>x.setAttribute('aria-pressed','false'));
+      startRotation();
+      return;
+    }
+    locked=true; stopRotation();
+    pills.forEach(x=>x.setAttribute('aria-pressed', x===p?'true':'false'));
+    rot=i; showWord(i);
+    // (později: filtrace „Co se děje" / zvýraznění pilíře dle PRIDOMKY[i].goto)
+  });
+});
+showWord(0); startRotation();
+
+/* ============================================================
+   Mega menu (hover + klik + Esc)
    ============================================================ */
 const header = document.getElementById('header');
 const triggers = [...document.querySelectorAll('[data-menu]')];
 const panels = [...document.querySelectorAll('[data-panel]')];
 let closeTimer;
-
-function openMenu(key){
-  clearTimeout(closeTimer);
-  header.classList.add('open');
-  panels.forEach(p=>p.classList.toggle('active', p.dataset.panel===key));
-  triggers.forEach(t=>t.setAttribute('aria-expanded', String(t.dataset.menu===key)));
-}
-function closeMenu(){
-  header.classList.remove('open');
-  panels.forEach(p=>p.classList.remove('active'));
-  triggers.forEach(t=>t.setAttribute('aria-expanded','false'));
-}
-const scheduleClose = ()=>{closeTimer=setTimeout(closeMenu,150);};
-
+function openMenu(key){ clearTimeout(closeTimer); header.classList.add('open'); panels.forEach(p=>p.classList.toggle('active',p.dataset.panel===key)); triggers.forEach(t=>t.setAttribute('aria-expanded',String(t.dataset.menu===key))); }
+function closeMenu(){ header.classList.remove('open'); panels.forEach(p=>p.classList.remove('active')); triggers.forEach(t=>t.setAttribute('aria-expanded','false')); }
+const scheduleClose=()=>{closeTimer=setTimeout(closeMenu,150);};
 triggers.forEach(t=>{
   const key=t.dataset.menu;
   t.addEventListener('mouseenter',()=>openMenu(key));
-  t.addEventListener('click',e=>{
-    e.preventDefault();
-    const isOpen = header.classList.contains('open') && t.getAttribute('aria-expanded')==='true';
-    isOpen ? closeMenu() : openMenu(key);
-  });
+  t.addEventListener('click',e=>{e.preventDefault();(header.classList.contains('open')&&t.getAttribute('aria-expanded')==='true')?closeMenu():openMenu(key);});
 });
 header.addEventListener('mouseleave',scheduleClose);
 header.addEventListener('mouseenter',()=>clearTimeout(closeTimer));
-/* zavřít při odchodu fokusu z headeru (klávesnice) */
-header.addEventListener('focusout',e=>{ if(!header.contains(e.relatedTarget)) scheduleClose(); });
+header.addEventListener('focusout',e=>{if(!header.contains(e.relatedTarget))scheduleClose();});
 document.getElementById('scrim').addEventListener('click',closeMenu);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
 
 /* Theme toggle */
 const root=document.documentElement;
-document.getElementById('themeToggle').addEventListener('click',()=>{
-  root.dataset.theme = root.dataset.theme==='light'?'dark':'light';
-});
+document.getElementById('themeToggle').addEventListener('click',()=>{root.dataset.theme = root.dataset.theme==='dark'?'light':'dark';});
 
-/* Language pills */
-document.querySelectorAll('.lang button').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('.lang button').forEach(x=>x.setAttribute('aria-pressed','false'));
-    b.setAttribute('aria-pressed','true');
-  });
-});
+/* Language */
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.lang button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');}));
 
-/* Mobile burger */
+/* Burger */
 const burger=document.getElementById('burger');
-burger.addEventListener('click',()=>{
-  const open=document.body.classList.toggle('nav-open');
-  burger.setAttribute('aria-expanded',String(open));
-});
+burger.addEventListener('click',()=>{const o=document.body.classList.toggle('nav-open');burger.setAttribute('aria-expanded',String(o));});
 </script>
 </body>
 </html>
