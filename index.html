@@ -90,7 +90,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 /* ============================================================
    HEADER + NAV
    ============================================================ */
-.site-header{position:sticky;top:0;z-index:60;background:color-mix(in srgb, var(--bg) 82%, transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft);transition:background .4s var(--ease),border-color .4s var(--ease)}
+.site-header{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--line);transition:background .4s var(--ease),border-color .4s var(--ease)}
 .bar{max-width:var(--max);margin-inline:auto;padding:0 var(--gutter);height:var(--header-h);display:flex;align-items:center;gap:32px}
 
 .wordmark{font-weight:600;font-size:20px;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:.4ch;white-space:nowrap}
@@ -155,7 +155,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 /* ============================================================
    HERO — FULLSCREEN
    ============================================================ */
-.hero{position:relative;overflow:hidden;background:var(--bg-hero);background-image:var(--glow);min-height:calc(100dvh - var(--header-h));display:flex;flex-direction:column;transition:background .4s var(--ease)}
+.hero{position:relative;overflow:hidden;background:var(--bg-hero);min-height:calc(100dvh - var(--header-h));display:flex;flex-direction:column;transition:background .4s var(--ease)}
 .hero-top{max-width:var(--max);margin-inline:auto;width:100%;padding:26px var(--gutter) 0;display:flex;justify-content:space-between}
 .hero-inner{max-width:var(--max);margin-inline:auto;width:100%;padding:clamp(24px,3vw,48px) var(--gutter);flex:1;display:flex;flex-direction:column;justify-content:center}
 h1{font-weight:700;letter-spacing:-.03em;line-height:.94;font-size:clamp(38px,6.2vw,88px)}
