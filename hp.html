@@ -87,7 +87,11 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 @keyframes introIn{to{opacity:1}}
 .intro .iwm{font-weight:700;font-size:clamp(36px,6vw,68px);letter-spacing:-.03em;color:#F0F1EC;line-height:1}
 .intro .iwm i{font-style:normal;font-family:var(--font-mono);font-weight:400;letter-spacing:-.04em;color:var(--mint)}
-.intro .iword{font-family:var(--font-mono);font-size:clamp(24px,3.6vw,42px);letter-spacing:-.03em;color:var(--mint);line-height:1.15;min-height:1.2em}
+.intro .idots span{opacity:0;animation:idot .45s ease forwards}
+.intro .idots span:nth-child(1){animation-delay:.75s}
+.intro .idots span:nth-child(2){animation-delay:1.05s}
+.intro .idots span:nth-child(3){animation-delay:1.35s}
+@keyframes idot{to{opacity:1}}
 .intro .iskip{position:absolute;bottom:18px;left:0;right:0;text-align:center;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,241,236,.4)}
 body.intro-lock{overflow:hidden}
 /* nástup obsahu hero po odhalení */
@@ -316,8 +320,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 
 <div class="intro" id="intro" aria-hidden="true">
   <div class="intro-inner">
-    <div class="iwm"><b>Znojmo</b> <i>chutná</i></div>
-    <div class="iword" id="iword">vínem</div>
+    <div class="iwm"><b>Znojmo</b> <i>chutná<span class="idots"><span>.</span><span>.</span><span>.</span></span></i></div>
   </div>
   <div class="iskip">kliknutím přeskočíte</div>
 </div>
@@ -552,16 +555,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
   const force = /[?&]intro/.test(location.search); // ?intro = přehrát vždy (demo/test)
   if(matchMedia('(prefers-reduced-motion:reduce)').matches || (!force && sessionStorage.getItem('zchIntro'))){ skipAll(); return; }
   document.body.classList.add('intro-lock');
-  const IWORDS = ['vínem','divadlem','létem','výhledem','historií']; // poslední = start slideshow
-  const wEl = document.getElementById('iword');
-  let i = 1, finished = false;
-  const cycle = setInterval(()=>{
-    wEl.textContent = IWORDS[i]; i++;
-    if(i >= IWORDS.length){ clearInterval(cycle); setTimeout(finish, 480); }
-  }, 175);
+  let finished = false;
+  const timer = setTimeout(finish, 2050); // wordmark + tečky … pak opona
   function finish(){
     if(finished) return; finished = true;
-    clearInterval(cycle);
+    clearTimeout(timer);
     sessionStorage.setItem('zchIntro','1');
     intro.classList.add('leave');
     document.body.classList.remove('intro-lock');
