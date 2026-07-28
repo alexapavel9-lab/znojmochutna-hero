@@ -88,6 +88,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 @keyframes introIn{to{opacity:1}}
 .intro .iwm{font-weight:700;font-size:clamp(36px,6vw,68px);letter-spacing:-.03em;color:#F0F1EC;line-height:1}
 .intro .iwm i{font-style:normal;font-family:var(--font-mono);font-weight:400;letter-spacing:-.04em;color:var(--mint)}
+.intro .idots{letter-spacing:-.3em}
 .intro .idots span{opacity:0;animation:idot .45s ease forwards}
 .intro .idots span:nth-child(1){animation-delay:.75s}
 .intro .idots span:nth-child(2){animation-delay:1.05s}
@@ -296,16 +297,17 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 @media (max-width:1160px){
   .nav,.tools .icon-btn.search span,.strip-head{display:none}
   .burger{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;color:var(--ink);margin-inline-start:auto}
-  .tools{margin-inline-start:auto;gap:8px}
+  .tools{margin-inline-start:auto;gap:12px}
   .mega-wrap{display:none}
   .strip{grid-template-columns:1fr}
-  .strip-cards{grid-template-columns:1fr}
+  .strip-cards{grid-template-columns:repeat(3,1fr);gap:10px}
   .f-cols{grid-template-columns:repeat(2,1fr)}
+  .f-col:last-child{grid-column:1/-1;padding-top:14px;border-top:1px solid var(--f-line)}
   .f-bottom{flex-direction:column;align-items:flex-start}
   /* ---------- mobilní drawer: vždy brand zeleň, stagger nástup ---------- */
   #mobileNav{position:fixed;inset:var(--header-h) 0 0;z-index:55;display:flex;flex-direction:column;background:linear-gradient(180deg,#0D4630,#0A3826);
     --ink:#F0F1EC;--ink-dim:#CBDED2;--mono:#A8C9B6;--line:rgba(240,241,236,.25);--line-soft:rgba(240,241,236,.14);--chip:rgba(240,241,236,.12);--panel-2:rgba(240,241,236,.2);
-    color:var(--ink);padding:18px var(--gutter) 26px;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+    color:var(--ink);padding:18px max(var(--gutter),calc((100vw - 560px)/2)) 26px;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
   body.nav-open #mobileNav{opacity:1;pointer-events:auto}
   body.nav-open{overflow:hidden}
   body.nav-open .site-header{background:#0D4630;border-bottom-color:rgba(240,241,236,.14);--ink:#F0F1EC;--ink-dim:#D3E2D8;--chip:rgba(240,241,236,.12);--line:rgba(240,241,236,.25)}
@@ -337,7 +339,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .m-sec .m-body a.m-action{color:var(--mint);font-weight:500}
   /* spodní utility */
   .m-foot{display:flex;align-items:center;gap:12px;padding-top:20px;margin-top:auto;border-top:1px solid var(--line-soft)}
-  .m-theme{margin-inline-start:auto;font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;color:var(--ink-dim);border:1px solid var(--line);padding:11px 15px;border-radius:11px}
+  .m-foot .theme-toggle{width:44px;height:44px;margin-inline-start:auto;color:var(--ink-dim)}
 }
 /* ---------- footer na malých šířkách ---------- */
 @media (max-width:640px){
@@ -346,25 +348,25 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .f-news input{min-width:0;flex:1 1 100%}
   .f-news button{flex:1;height:48px}
   .f-cols{grid-template-columns:1fr 1fr;gap:22px 18px}
-  .f-col:last-child{grid-column:1/-1;padding-top:14px;border-top:1px solid var(--f-line)}
   .f-legal{gap:12px;font-size:12px}
 }
 @media (max-width:560px){
-  .bar{gap:12px}
+  .bar{gap:16px}
   .bar .lang,.bar .theme-toggle{display:none}
-  /* hledání jen jako ikona */
-  .bar .icon-btn.search{padding:0;width:40px;justify-content:center}
-  /* logo pod sebou */
-  .wordmark{flex-direction:column;align-items:flex-start;gap:0;line-height:1;font-size:17px}
-  .wordmark i{font-size:15px;margin-top:2px}
+  /* hledání jen jako ikona, větší */
+  .bar .icon-btn.search{padding:0;width:44px;justify-content:center}
+  .bar .icon-btn.search svg{width:20px;height:20px}
+  /* logo pod sebou, větší */
+  .wordmark{flex-direction:column;align-items:flex-start;gap:0;line-height:1;font-size:19.5px}
+  .wordmark i{font-size:17px;margin-top:2px}
   /* Vstupenky zůstávají v liště, kompaktní */
-  .bar .btn-tickets{font-size:13px;padding:9px 14px;margin-inline-start:0}
+  .bar .btn-tickets{font-size:13.5px;padding:10px 15px;margin-inline-start:0}
   .hero-actions{flex-direction:column;align-items:stretch}
   .hero-actions .chips{width:100%;margin-inline-start:0}
   .btn{width:100%;justify-content:center}
   /* velký titulek: každé slovo na svém řádku, fold končí u štítků */
-  h1{font-size:clamp(46px,15vw,60px)}
-  h1 .pridomek{font-size:clamp(42px,13.5vw,54px)}
+  h1{font-size:clamp(50px,17.5vw,68px)}
+  h1 .pridomek{font-size:clamp(44px,14vw,56px)}
   .lede{margin-top:16px}
   .hero-actions{margin-top:22px;gap:10px}
 }
@@ -562,7 +564,10 @@ Object.entries(MENU).forEach(([key,data],i)=>{
 /* Mobile drawer utilities — Vstupenky i Hledat jsou v liště; v draweru jen sekce + jazyk/téma dole */
 mob.insertAdjacentHTML('beforeend', `<div class="m-foot">
   <div class="lang" role="group" aria-label="Jazyk"><button aria-pressed="true">CS</button><button aria-pressed="false">EN</button><button aria-pressed="false">DE</button></div>
-  <button class="m-theme" aria-label="Přepnout světlý / tmavý režim">Tmavý / světlý</button>
+  <button class="theme-toggle m-theme" aria-label="Přepnout světlý / tmavý režim">
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M22 12h-2.5M4.5 12H2M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8M18.4 18.4l-1.8-1.8M7.4 7.4 5.6 5.6"/></svg>
+  </button>
 </div>`);
 
 /* Strip cards */
