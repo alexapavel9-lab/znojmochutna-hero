@@ -96,8 +96,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .intro .iskip{position:absolute;bottom:18px;left:0;right:0;text-align:center;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,241,236,.4)}
 body.intro-lock{overflow:hidden}
 /* nástup obsahu hero po odhalení */
-body.with-intro .site-header{transform:translateY(-100%);transition:transform .6s var(--ease)}
-body.with-intro.intro-done .site-header{transform:none;transition-delay:.62s}
+body.with-intro .site-header{transform:translateY(-100%);transition:background .35s var(--ease),border-color .35s var(--ease),transform .6s var(--ease)}
+body.with-intro.intro-done .site-header{transform:none;transition-delay:0s,0s,.62s}
 body.with-intro .hero-inner>*,body.with-intro .strip-band{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
 body.with-intro .hero .ph{transform:scale(1.06);transition:opacity .9s var(--ease),transform 1.5s var(--ease)}
 body.with-intro.intro-done .hero-inner>*,body.with-intro.intro-done .strip-band{opacity:1;transform:none}
@@ -111,7 +111,10 @@ body.with-intro.intro-done .strip-band{transition-delay:.55s}
 /* ============================================================
    HEADER + NAV
    ============================================================ */
-.site-header{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--line);transition:background .4s var(--ease),border-color .4s var(--ease)}
+.site-header{position:fixed;top:0;left:0;right:0;z-index:60;background:transparent;border-bottom:1px solid transparent;transition:background .35s var(--ease),border-color .35s var(--ease)}
+/* nad fotkou (bez scrollu, menu zavřené): průhledný, světlé prvky */
+.site-header:not(.scrolled):not(.open){--ink:#F0F1EC;--ink-dim:#D3E2D8;--mono:#A8C9B6;--line:rgba(240,241,236,.25);--line-soft:rgba(240,241,236,.16);--chip:rgba(240,241,236,.12);--chip-hi:rgba(240,241,236,.22);--panel-2:rgba(240,241,236,.18)}
+.site-header.scrolled,.site-header.open{background:var(--bg);border-bottom-color:var(--line)}
 .bar{max-width:var(--max);margin-inline:auto;padding:0 var(--gutter);height:var(--header-h);display:flex;align-items:center;gap:32px}
 
 .wordmark{font-weight:600;font-size:20px;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:.4ch;white-space:nowrap}
@@ -186,7 +189,7 @@ body.with-intro.intro-done .strip-band{transition-delay:.55s}
    Text v heru je vždy světlý, nezávisle na light/dark režimu.
    ============================================================ */
 .hero{
-  position:relative;overflow:hidden;min-height:calc(100dvh - var(--header-h));
+  position:relative;overflow:hidden;min-height:100dvh;
   display:flex;flex-direction:column;background:var(--brand-green);
   /* lokální přepis proměnných → obsah heru drží světlou verzi v obou režimech */
   --ink:#F0F1EC;--ink-dim:#CBDED2;--mint:#93D3A2;--mint-hi:#ADE0B9;--mono:#A8C9B6;
@@ -205,7 +208,7 @@ body.with-intro.intro-done .strip-band{transition-delay:.55s}
   linear-gradient(to top,rgba(3,16,10,.92),rgba(3,16,10,.55) 30%,rgba(3,16,10,0) 60%)}
 
 .hero-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:clamp(18px,2.6vw,32px)}
-.hero-inner{max-width:var(--max);margin-inline:auto;width:100%;padding:clamp(24px,3vw,48px) var(--gutter);flex:1;display:flex;flex-direction:column;justify-content:center}
+.hero-inner{max-width:var(--max);margin-inline:auto;width:100%;padding:calc(var(--header-h) + clamp(24px,3vw,48px)) var(--gutter) clamp(24px,3vw,48px);flex:1;display:flex;flex-direction:column;justify-content:center}
 h1{font-weight:700;letter-spacing:-.03em;line-height:.94;font-size:clamp(38px,6.2vw,88px)}
 h1 .line{display:block}
 h1 .pridomek{display:block;position:relative;height:1.04em;font-family:var(--font-mono);font-weight:400;letter-spacing:-.04em;line-height:1;color:var(--mint);font-size:clamp(38px,6.2vw,88px);margin-top:.04em}
@@ -629,6 +632,11 @@ document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',
 /* Burger */
 const burger=document.getElementById('burger');
 burger.addEventListener('click',()=>{const o=document.body.classList.toggle('nav-open');burger.setAttribute('aria-expanded',String(o));});
+
+/* Průhledný header nad fotkou → plný podklad po scrollu */
+const onScroll=()=>header.classList.toggle('scrolled', scrollY>24);
+addEventListener('scroll',onScroll,{passive:true});
+onScroll();
 </script>
 </body>
 </html>
