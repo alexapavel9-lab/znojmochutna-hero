@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Znojmo chutná — mapa webu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Znojmo chutná — MAPA WEBU, jednoduchá verze („prostě jen IA")
+   Sloupec = obrazovka/sekce · pill hlavička · číslované bloky.
+   Klik na blok → popisný panel vpravo (co to je + co obsahuje).
+   Tisk: deska na 1. straně, popisná část jako příloha.
+   ============================================================ */
+:root{
+  --font:'Space Grotesk',system-ui,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+  --green:#0D4630; --mint:#93D3A2; --mid:#5C9A72; --ink:#12140F; --grey:#8B8F85;
+  --paper:#F0F1EC; --block:#E4E6DF; --line:#C9CCC2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1360px;margin:0 auto;padding:clamp(28px,4vw,52px) clamp(18px,3vw,40px) 60px}
+
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:clamp(24px,3vw,40px)}
+.eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;font-size:10.5px;color:var(--grey)}
+h1{font-size:clamp(24px,3vw,34px);font-weight:700;letter-spacing:-.02em;margin-top:6px}
+h1 i{font-style:normal;font-family:var(--mono);font-weight:400;color:var(--green);letter-spacing:-.03em}
+.hint{font-size:12.5px;color:var(--grey);margin-top:6px}
+.btn-print{font:inherit;font-weight:600;font-size:13px;border:1px solid var(--ink);background:#fff;color:var(--ink);padding:9px 15px;border-radius:10px;cursor:pointer}
+.btn-print:hover{background:var(--ink);color:var(--paper)}
+
+/* ---------- layout: deska + popisný panel ---------- */
+.layout{display:grid;grid-template-columns:1fr 320px;gap:clamp(24px,3vw,44px);align-items:start}
+@media(max-width:1020px){.layout{grid-template-columns:1fr}}
+
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.6vw,36px) clamp(22px,3vw,44px)}
+@media(max-width:1240px){.board{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.board{grid-template-columns:1fr}}
+
+.col .pill{background:var(--green);color:#fff;font-weight:700;font-size:16px;letter-spacing:-.01em;text-align:center;padding:14px 18px;border-radius:999px}
+.col .pill small{display:block;font-family:var(--mono);font-weight:400;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);margin-top:2px}
+.col ul{list-style:none;margin:10px 0 0 26px;position:relative;display:flex;flex-direction:column;gap:9px;padding:4px 0 2px}
+.col ul::before{content:"";position:absolute;left:-14px;top:0;bottom:26px;width:1px;background:var(--line)}
+.col li{position:relative;background:var(--block);border:1px solid transparent;border-radius:12px;padding:10px 14px;font-weight:500;font-size:13.5px;line-height:1.35;width:fit-content;max-width:100%;cursor:pointer;transition:border-color .15s,transform .15s}
+.col li:hover{border-color:var(--mid);transform:translateX(2px)}
+.col li.active{border-color:var(--green);background:#fff}
+.col li::before{content:"";position:absolute;left:-14px;top:50%;width:10px;height:1px;background:var(--line)}
+.col li::after{content:"";position:absolute;left:-5px;top:50%;transform:translateY(-50%);border:3px solid transparent;border-left-color:var(--line)}
+.col li .n{font-weight:600;color:var(--green);margin-right:2px}
+.col li small{color:#5C6157;font-weight:400}
+.col li.ghost{background:transparent;border:1px dashed var(--line);color:#5C6157;font-weight:400}
+.col li.ghost.active{border-color:var(--green);border-style:solid;background:#fff}
+
+/* ---------- popisný panel ---------- */
+.aside{position:sticky;top:16px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;min-height:220px}
+.aside .ph-note{color:var(--grey);font-size:13px;line-height:1.55}
+.aside .a-eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;font-size:9.5px;color:var(--mid)}
+.aside h3{font-size:18px;font-weight:700;letter-spacing:-.01em;margin:6px 0 8px}
+.aside .a-desc{font-size:13px;line-height:1.55;color:#3E423A}
+.aside ul{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:4px}
+.aside li{font-size:12.5px;color:#3E423A;padding-left:12px;position:relative}
+.aside li::before{content:"";position:absolute;left:0;top:.5em;width:5px;height:5px;border-radius:50%;background:var(--mid)}
+.aside .a-close{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:11px;color:var(--grey);cursor:pointer;background:none;border:none;display:none}
+@media(max-width:1020px){
+  .aside{position:fixed;left:12px;right:12px;bottom:12px;z-index:50;box-shadow:0 18px 50px -20px rgba(18,20,15,.4);display:none;min-height:0;max-height:55vh;overflow:auto}
+  .aside.open{display:block}
+  .aside .a-close{display:block}
+}
+
+.prurez{margin-top:clamp(28px,4vw,44px);border-top:1px solid var(--line);padding-top:16px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:#5C6157}
+.prurez b{font-weight:600;color:var(--ink)}
+.foot{margin-top:14px;font-size:11px;color:var(--grey);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+/* ---------- tisková příloha: popisná část ---------- */
+.appendix{display:none}
+
+@page{size:A4 landscape;margin:10mm}
+@media print{
+  body{background:#fff}
+  .wrap{max-width:none;padding:0}
+  .btn-print{display:none}
+  .hint{display:none}
+  .layout{grid-template-columns:1fr}
+  .aside{display:none!important}
+  .board{grid-template-columns:repeat(3,1fr);gap:8mm 10mm}
+  .col{break-inside:avoid}
+  .col .pill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .appendix{display:block;break-before:page}
+  .appendix h2{font-size:18px;font-weight:700;margin-bottom:4mm}
+  .appendix .ap-sec{break-inside:avoid;margin-bottom:6mm}
+  .appendix .ap-sec h3{font-size:13px;font-weight:700;color:var(--green);margin-bottom:2mm}
+  .appendix .ap-item{font-size:10.5px;line-height:1.45;margin-bottom:1.6mm}
+  .appendix .ap-item b{font-weight:600}
+  .appendix .ap-item .ob{color:#5C6157}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="eyebrow">Znojmo chutná · informační architektura · návrh k potvrzení</div>
+      <h1>Mapa webu <i>znojmochutna.cz</i></h1>
+      <div class="hint">Klikněte na blok — vpravo se ukáže, co to je a co bude obsahovat.</div>
+    </div>
+    <button class="btn-print" onclick="print()">Vytisknout / PDF</button>
+  </header>
+
+  <div class="layout">
+    <div class="board" id="board"></div>
+
+    <aside class="aside" id="aside">
+      <button class="a-close" id="asideClose">zavřít ✕</button>
+      <div id="asideBody">
+        <p class="ph-note">Vyberte blok v mapě.<br><br>Každý blok = jedna část webu; panel ukáže jeho účel a předpokládaný obsah — např. u Kategorií výčet všech 16, u Detailu akce jeho prvky.</p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="prurez">
+    <b>Průřezové:</b>
+    <span>Hledání</span><span>Jazyky CS / EN / DE</span><span>Newsletter (Ecomail)</span><span>Light / dark</span><span>404</span>
+  </div>
+
+  <div class="foot">
+    <span>Znojmo chutná · mapa webu · 29. 7. 2026</span>
+    <span>čárkovaně = pohled/opce · ×N = generováno z CMS · detailní verze: Mapa-webu-obsah.html</span>
+  </div>
+
+  <div class="appendix" id="appendix"><h2>Popisná část — co bloky obsahují</h2></div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — bloky + popisy (jeden zdroj pro desku, panel i tisk)
+   ============================================================ */
+const MAPA=[
+  {pill:'Homepage', sub:'znojmochutna.cz', items:[
+    {t:'Hero', s:'kampaně z adminu, rotující přídomek',
+     d:'Úvodní obrazovka. Bannery a kampaně se ovládají z administrace, přídomek brandu rotuje s fotografií („Znojmo chutná vínem / divadlem / historií…").',
+     o:['bannery / kampaně z adminu','rotující přídomek s fotem','CTA: Prohlédnout program · Objevit Znojmo','chipy Dnes / Tento víkend']},
+    {t:'Nenechte si ujít', s:'kurátorský výběr',
+     d:'Redakčně vybrané akce s badge TOP — to nejdůležitější, co se právě děje.',
+     o:['3 kurátorské karty','ručně řízené pořadí (admin)']},
+    {t:'Pás akcí', s:'Dnes / Víkend',
+     d:'Nejbližší akce z jednotné databáze — vstup pro místní. Proklik do Přehledu akcí (① 1).',
+     o:['automaticky z databáze akcí','filtr Dnes / Tento víkend']},
+    {t:'Dlaždice sekcí', s:'',
+     d:'Čtyři vstupy zrcadlící hlavní menu: Program, Objevuj Znojmo, Víno & sklepy, Plánování návštěvy.',
+     o:['4 dlaždice s fotem a popiskem']},
+    {t:'Top místa & památky', s:'',
+     d:'Výběr nejnavštěvovanějších míst s proklikem na jejich detaily (② 2).',
+     o:['Radniční věž · Znojemské podzemí · rotunda · divadlo…']},
+    {t:'Mapa — teaser', s:'',
+     d:'Náhled interaktivní mapy zájmů, proklik na plnou mapu (② 3).',
+     o:['statický náhled + tlačítko Otevřít mapu']},
+    {t:'Víno & sklepy — promo', s:'',
+     d:'Blok jádra brandu Znojmo Chutná — vstup do sekce ③.',
+     o:['foto sklepních uliček + vstupy']},
+    {t:'Kampaň', s:'Vinobraní countdown',
+     d:'Sezónní kampaňový blok — např. odpočet do Znojemského vinobraní, proklik na kampaňový landing (① 4).',
+     o:['countdown / vizuál kampaně','řízeno z adminu']},
+    {t:'Newsletter', s:'',
+     d:'Přihlášení k odběru — napojeno na Ecomail.',
+     o:['e-mail input + souhlas']},
+    {t:'Footer', s:'mapa webu',
+     d:'Patička ve struktuře mapy webu: sloupce sekcí, organizace, právní odkazy, sociální sítě.',
+     o:['sitemap sloupce','newsletter CTA','organizace (patička P.1–P.4)']},
+  ]},
+  {pill:'① Program', sub:'co se děje', items:[
+    {t:'Přehled akcí', s:'seznam · kalendář · mapa',
+     d:'Jádro webu — jediná databáze akcí celého Znojemska. Vše ostatní (kategorie, kampaně, vinařské akce) jsou jen pohledy nad ní.',
+     o:['pohledy: seznam · kalendář · mapa','chipy Dnes / Víkend · výběr data','filtr kategorie · místo · hledání','celé Znojemsko · vč. dlouhodobých akcí']},
+    {t:'Detail akce', s:'×N',
+     d:'Detail každé akce, generovaný z CMS. Akce je provázaná s místem konání — karta místa s proklikem.',
+     o:['termíny + „dalších X termínů"','vstupenky GoOut (nákup)','karta místa → detail místa','pořadatel · iCal · sdílení','štítky: zdarma · bezbariérové','související akce · graceful proběhlá akce']},
+    {t:'Kategorie', s:'16 pohledů kalendáře',
+     d:'Předfiltrované pohledy jednoho kalendáře — žádné stránky k údržbě. Návrh 16 kategorií k potvrzení:',
+     o:['Divadlo · Koncerty & hudba · Festivaly · Výstavy','Víno & gastro · Sport · Rodina & děti · Příroda','Prohlídky & turismus · Plesy & tanec · Film & kino · Trhy & jarmarky','Přednášky & besedy · Workshopy & kurzy · Folklor & tradice · Ostatní','cílovky (Pro seniory…) = filtry, ne kategorie']},
+    {t:'Kampaňové landingy', s:'×5',
+     d:'Kurátorské stránky kampaní uvnitř Programu — evergreen URL s ročními edicemi.',
+     o:['Vinobraní · Kulturní léto · Znojmo žije divadlem · Advent · ABO','hero + filtrovaný program kampaně','praktické info + PDF přílohy']},
+    {t:'Přidat akci', s:'formulář',
+     d:'Samoobsluha pro externí pořadatele s moderační frontou a AI úpravou textu. Databázi plní i automatické importy.',
+     o:['strukturovaný formulář + moderace','AI úprava textu','importy: ZnojmoRegion RSS · GoOut feeder']},
+  ]},
+  {pill:'② Objevuj Znojmo', sub:'místa · mapa · trasy', items:[
+    {t:'Místa — přehled', s:'',
+     d:'Grid provozů a památek s filtrem typu.',
+     o:['karty míst s fotem','filtr: provozy / památky / POI']},
+    {t:'Detail místa', s:'×6',
+     d:'Jednotná šablona pro provozy i památky Besedy: Divadlo, Jízdárna, Louka, Radniční věž, Podzemí, Expozice pivovarnictví.',
+     o:['otvíračka · ceník · kontakt · mapa','galerie · virtuální prohlídka · PDF přílohy','program místa (z databáze akcí)','kombinované vstupné (cross-sell)']},
+    {t:'Mapa zájmů', s:'8–12 vrstev',
+     d:'Interaktivní mapa s vrstvami spravovanými v adminu. Mapa je přepínač zobrazení i na seznamech — ne oddělený svět.',
+     o:['vrstvy: památky & provozy · sklepy · hřiště','vodáctví · půjčovny · vyhlídky · trasy','parkování · WC','clustering · mobilní bottom-sheet']},
+    {t:'Body zájmu', s:'×N',
+     d:'Detaily POI generované z CMS. Sport se odkazuje na sportovisteznojmo.cz — výjimkou cyklo a vinařská turistika.',
+     o:['hřiště · vodáctví · půjčovny · vyhlídky','foto · popis · poloha · otvíračka · odkaz']},
+    {t:'Trasy & okruhy', s:'+ GPX ×N',
+     d:'Kurátorské pojmenované trasy — žádný trip-planner builder.',
+     o:['pěší · cyklo · vinařské · NP Podyjí · vodáctví na Dyji','mapa trasy · GPX ke stažení','zastávky · délka · náročnost']},
+    {t:'Tematické landingy', s:'×3',
+     d:'Tři tematické stránky; termíny prohlídek se berou z Programu.',
+     o:['Znojmo s dětmi','NP Podyjí','Prohlídky s průvodcem']},
+  ]},
+  {pill:'③ Víno & sklepy', sub:'jádro brandu', items:[
+    {t:'Landing sekce', s:'',
+     d:'Výkladní skříň identity Znojmo Chutná — doména znojmochutna.cz deep-linkuje sem.',
+     o:['akcent brandu','vstupy: sklepy · vinařské akce · trasy']},
+    {t:'Sklepní uličky — adresář', s:'',
+     d:'Adresář sklepních uliček a sklepů.',
+     o:['Šatov · Nový Šaldorf · Hnánice · Dyjákovičky…']},
+    {t:'Detail sklepu', s:'×N',
+     d:'Detail sklepu či uličky, generovaný z CMS.',
+     o:['foto · popis · poloha · kontakt / odkaz']},
+    {t:'Vinařské akce', s:'→ Program', ghost:true,
+     d:'Pohled Programu na kategorii Víno — včetně degustací a otevřených sklepů. Žádná stránka k údržbě.',
+     o:['předfiltrovaný kalendář (kategorie Víno)']},
+    {t:'Vinařské trasy', s:'→ Objevuj', ghost:true,
+     d:'Pohled na vinařské trasy v sekci Objevuj (② 5). Vinobraní v menu = proklik na kampaň (① 4).',
+     o:['vinařské stezky + GPX']},
+  ]},
+  {pill:'④ Plánování návštěvy', sub:'praktické', items:[
+    {t:'Infocentra (TIC)', s:'',
+     d:'Tři infocentra s kontakty a otvírací dobou.',
+     o:['adresy · kontakty · otvíračky']},
+    {t:'Vstupenky — kde koupit', s:'',
+     d:'Kde koupit vstupenky online i na místě.',
+     o:['GoOut online','pokladny TIC','kombinované vstupné (věž + podzemí)']},
+    {t:'Doprava & parkování', s:'',
+     d:'Jak dorazit a kde zaparkovat — parkoviště i jako vrstva mapy.',
+     o:['auto · vlak · bus','parkoviště (vrstva mapy zájmů)']},
+    {t:'Ke stažení', s:'PDF',
+     d:'Materiály ke stažení.',
+     o:['mapy · průvodci · programy (PDF)']},
+    {t:'Naplánuj si den', s:'opce', ghost:true,
+     d:'Volitelný wizard k rozhodnutí: datum + zájmy → automatický návrh dne z akcí, okruhů a otvíraček.',
+     o:['vstupy: datum · zájmy · délka','výstup: itinerář dne']},
+  ]},
+  {pill:'Patička', sub:'organizace', items:[
+    {t:'Znojemská Beseda — profil', s:'',
+     d:'Profil organizace — sem míří 301 ze staré domény znojemskabeseda.cz.',
+     o:['o organizaci · tým','výroční zprávy · žádosti 106/1999','kariéra · press & média']},
+    {t:'Pronájmy prostor', s:'formulář',
+     d:'Nabídka prostor s kalendářem dostupnosti a poptávkou.',
+     o:['prostory + fotogalerie','kalendář dostupnosti','poptávkový formulář']},
+    {t:'Kontakty', s:'',
+     d:'Kontakty na instituci a lidi.',
+     o:['instituce · fakturační údaje · tým']},
+    {t:'GDPR · Přístupnost', s:'',
+     d:'Právní minimum webu.',
+     o:['GDPR & cookies','prohlášení o přístupnosti']},
+  ]},
+];
+
+/* ============================================================ RENDER */
+const el=(h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstElementChild;};
+const board=document.getElementById('board');
+MAPA.forEach((sec,si)=>{
+  const lis=sec.items.map((it,ii)=>`
+    <li data-si="${si}" data-ii="${ii}" class="${it.ghost?'ghost':''}">
+      <span class="n">${ii+1}.</span> ${it.t}${it.s?` <small>(${it.s})</small>`:''}
+    </li>`).join('');
+  board.appendChild(el(`<div class="col">
+    <div class="pill">${sec.pill}<small>${sec.sub}</small></div>
+    <ul>${lis}</ul></div>`));
+});
+
+/* panel */
+const aside=document.getElementById('aside');
+const asideBody=document.getElementById('asideBody');
+let activeLi=null;
+function selectBlock(li, openPanel=true){
+  activeLi?.classList.remove('active');
+  li.classList.add('active'); activeLi=li;
+  const sec=MAPA[li.dataset.si], it=sec.items[li.dataset.ii];
+  asideBody.innerHTML=`
+    <div class="a-eyebrow">${sec.pill} · blok ${+li.dataset.ii+1}</div>
+    <h3>${it.t}</h3>
+    <p class="a-desc">${it.d}</p>
+    ${it.o?.length?`<ul>${it.o.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}`;
+  if(openPanel) aside.classList.add('open');
+}
+board.addEventListener('click',(e)=>{
+  const li=e.target.closest('li'); if(li) selectBlock(li);
+});
+/* výchozí výběr: Homepage → 1. Hero (na mobilu bez vyjetí panelu) */
+selectBlock(document.querySelector('#board li'), false);
+document.getElementById('asideClose').onclick=()=>{aside.classList.remove('open');activeLi?.classList.remove('active');activeLi=null;};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){aside.classList.remove('open');activeLi?.classList.remove('active');activeLi=null;}});
+
+/* tisková příloha — popisná část */
+const ap=document.getElementById('appendix');
+MAPA.forEach(sec=>{
+  ap.appendChild(el(`<div class="ap-sec">
+    <h3>${sec.pill}${sec.sub?` — ${sec.sub}`:''}</h3>
+    ${sec.items.map((it,ii)=>`<div class="ap-item"><b>${ii+1}. ${it.t}</b> — ${it.d}${it.o?.length?` <span class="ob">Obsah: ${it.o.join(' · ')}.</span>`:''}</div>`).join('')}
+  </div>`));
+});
+</script>
+</body>
+</html>
