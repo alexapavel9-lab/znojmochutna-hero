@@ -144,6 +144,13 @@ body.with-intro.intro-done .strip-band{transition-delay:.55s}
 :root[data-theme="light"] .theme-toggle .sun{display:block}
 :root[data-theme="light"] .theme-toggle .moon{display:none}
 .burger{display:none}
+/* hamburger: dvě asymetrické linky s oblými konci → morph do X */
+.b-lines{position:relative;width:22px;height:14px;display:block}
+.b-lines i{position:absolute;height:2px;border-radius:99px;background:currentColor;transition:top .3s var(--ease),width .3s var(--ease),transform .3s var(--ease),left .3s var(--ease)}
+.b-lines i:first-child{left:0;top:0;width:22px}
+.b-lines i:last-child{right:0;top:12px;width:13px}
+body.nav-open .b-lines i:first-child{top:6px;transform:rotate(45deg)}
+body.nav-open .b-lines i:last-child{top:6px;width:22px;left:0;right:auto;transform:rotate(-45deg)}
 
 /* ============================================================
    MEGA MENU (zaoblený, elevovaný) — 1:1 z hero.html
@@ -295,22 +302,52 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .strip-cards{grid-template-columns:1fr}
   .f-cols{grid-template-columns:repeat(2,1fr)}
   .f-bottom{flex-direction:column;align-items:flex-start}
-  #mobileNav{position:fixed;inset:var(--header-h) 0 0;z-index:55;display:block;background:var(--bg);padding:14px var(--gutter) 40px;overflow-y:auto;transform:translateY(-8px);opacity:0;pointer-events:none;transition:.25s var(--ease)}
-  body.nav-open #mobileNav{transform:none;opacity:1;pointer-events:auto}
+  /* ---------- mobilní drawer: vždy brand zeleň, stagger nástup ---------- */
+  #mobileNav{position:fixed;inset:var(--header-h) 0 0;z-index:55;display:flex;flex-direction:column;background:linear-gradient(180deg,#0D4630,#0A3826);
+    --ink:#F0F1EC;--ink-dim:#CBDED2;--mono:#A8C9B6;--line:rgba(240,241,236,.25);--line-soft:rgba(240,241,236,.14);--chip:rgba(240,241,236,.12);--panel-2:rgba(240,241,236,.2);
+    color:var(--ink);padding:18px var(--gutter) 26px;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+  body.nav-open #mobileNav{opacity:1;pointer-events:auto}
   body.nav-open{overflow:hidden}
+  body.nav-open .site-header{background:#0D4630;border-bottom-color:rgba(240,241,236,.14);--ink:#F0F1EC;--ink-dim:#D3E2D8;--chip:rgba(240,241,236,.12);--line:rgba(240,241,236,.25)}
+  /* stagger položek draweru */
+  #mobileNav>*{opacity:0;transform:translateY(14px);transition:opacity .4s var(--ease),transform .4s var(--ease)}
+  body.nav-open #mobileNav>*{opacity:1;transform:none}
+  body.nav-open #mobileNav>:nth-child(1){transition-delay:.05s}
+  body.nav-open #mobileNav>:nth-child(2){transition-delay:.09s}
+  body.nav-open #mobileNav>:nth-child(3){transition-delay:.13s}
+  body.nav-open #mobileNav>:nth-child(4){transition-delay:.17s}
+  body.nav-open #mobileNav>:nth-child(5){transition-delay:.21s}
+  body.nav-open #mobileNav>:nth-child(6){transition-delay:.25s}
+  body.nav-open #mobileNav>:nth-child(7){transition-delay:.29s}
+  /* horní akce */
+  .m-tickets{display:block;text-align:center;background:var(--mint);color:#0A3826;font-weight:600;font-size:16px;padding:15px;border-radius:13px;margin-bottom:8px}
+  .m-search{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px;border-radius:13px;border:1px solid var(--line);color:var(--ink-dim);font-size:15px;margin-bottom:10px}
+  .m-search svg{width:16px;height:16px}
+  /* sekce */
   .m-sec{border-bottom:1px solid var(--line-soft)}
-  .m-sec>summary{list-style:none;cursor:pointer;padding:18px 4px;font-size:20px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;justify-content:space-between}
+  .m-sec>summary{list-style:none;cursor:pointer;padding:19px 2px;display:flex;align-items:baseline;gap:14px}
   .m-sec>summary::-webkit-details-marker{display:none}
-  .m-sec>summary .plus{color:var(--mint);font-weight:400;transition:transform .2s var(--ease)}
+  .m-sec .m-num{font-family:var(--font-mono);font-size:11px;color:var(--mono);letter-spacing:.08em}
+  .m-sec .m-label{font-size:24px;font-weight:600;letter-spacing:-.015em}
+  .m-sec .plus{margin-left:auto;color:var(--mint);font-size:24px;font-weight:300;line-height:.8;transition:transform .25s var(--ease)}
   .m-sec[open]>summary .plus{transform:rotate(45deg)}
-  .m-sec .m-body{padding:0 4px 18px;display:flex;flex-direction:column;gap:2px}
-  .m-sec .m-body a{padding:9px 0;font-size:16px;color:var(--ink-dim)}
-  .m-sec .m-body a:hover{color:var(--mint)}
-  /* utilities uvnitř draweru */
-  .m-tickets{display:block;text-align:center;background:var(--mint);color:#0A3826;font-weight:600;font-size:15px;padding:14px;border-radius:12px;margin:6px 0 18px}
-  :root[data-theme="light"] .m-tickets{color:#F0F1EC}
-  .m-foot{display:flex;align-items:center;gap:12px;padding-top:18px;margin-top:8px;border-top:1px solid var(--line-soft)}
-  .m-theme{margin-inline-start:auto;font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;color:var(--ink-dim);border:1px solid var(--line);padding:10px 14px;border-radius:10px}
+  .m-sec .m-body{padding:2px 2px 20px 34px;display:flex;flex-direction:column}
+  .m-sec .m-body a{padding:10px 0;font-size:16.5px;color:var(--ink-dim);border-bottom:1px dashed rgba(240,241,236,.09)}
+  .m-sec .m-body a:last-child{border-bottom:none}
+  .m-sec .m-body a.m-action{color:var(--mint);font-weight:500}
+  /* spodní utility */
+  .m-foot{display:flex;align-items:center;gap:12px;padding-top:20px;margin-top:auto;border-top:1px solid var(--line-soft)}
+  .m-theme{margin-inline-start:auto;font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;color:var(--ink-dim);border:1px solid var(--line);padding:11px 15px;border-radius:11px}
+}
+/* ---------- footer na malých šířkách ---------- */
+@media (max-width:640px){
+  .f-cta{flex-direction:column;align-items:stretch;gap:18px}
+  .f-news-row{flex-wrap:wrap}
+  .f-news input{min-width:0;flex:1 1 100%}
+  .f-news button{flex:1;height:48px}
+  .f-cols{grid-template-columns:1fr 1fr;gap:22px 18px}
+  .f-col:last-child{grid-column:1/-1;padding-top:14px;border-top:1px solid var(--f-line)}
+  .f-legal{gap:12px;font-size:12px}
 }
 @media (max-width:560px){
   .bar{gap:14px}
@@ -351,7 +388,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
       </button>
       <a class="btn-tickets" href="#" title="Vstupenky → Program">Vstupenky</a>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <span class="b-lines" aria-hidden="true"><i></i><i></i></span>
       </button>
     </div>
   </div>
@@ -409,7 +446,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 </main>
 
 <footer class="site-footer">
-  <span class="f-okurka" aria-hidden="true"></span>
+  <!-- <span class="f-okurka" aria-hidden="true"></span> — rytina zatím vypnutá -->
   <div class="f-inner">
     <div class="f-cta">
       <h3>Máme prostřeno.<br><span>Ochutnáte?</span></h3>
@@ -503,14 +540,17 @@ Object.entries(MENU).forEach(([key,data])=>{
   mega.appendChild(el(`<div class="panel" data-panel="${key}">${cols}<a class="col feat ${f.theme}${f.img?' photo':''}" href="#">${fPhoto}<span class="ghost">${f.ghost}</span><span class="kicker">${f.kicker}</span><span class="f-title">${f.title}</span><span class="f-meta">${f.meta}</span><span class="f-go">Zobrazit ${arrow}</span></a></div>`));
 });
 
-/* Mobile accordion */
+/* Mobile accordion — číslované sekce, akce v mint */
 const mob = document.getElementById('mobileNav');
-Object.entries(MENU).forEach(([key,data])=>{
+Object.entries(MENU).forEach(([key,data],i)=>{
   const links = data.columns.flatMap(c=>c.links).map(l=>`<a href="#">${l.t}</a>`).join('');
-  mob.appendChild(el(`<details class="m-sec"><summary>${data.label}<span class="plus">+</span></summary><div class="m-body">${links}${data.action?`<a href="#">${data.action.t} →</a>`:''}</div></details>`));
+  mob.appendChild(el(`<details class="m-sec"><summary><span class="m-num">0${i+1}</span><span class="m-label">${data.label}</span><span class="plus">+</span></summary><div class="m-body">${links}${data.action?`<a class="m-action" href="#">${data.action.t} →</a>`:''}</div></details>`));
 });
 
-/* Mobile drawer utilities — Vstupenky nahoře, jazyk + téma dole */
+/* Mobile drawer utilities — Vstupenky + Hledat nahoře, jazyk + téma dole */
+mob.insertAdjacentHTML('afterbegin', `<button class="m-search" type="button">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Hledat
+</button>`);
 mob.insertAdjacentHTML('afterbegin', `<a class="m-tickets" href="#">Vstupenky</a>`);
 mob.insertAdjacentHTML('beforeend', `<div class="m-foot">
   <div class="lang" role="group" aria-label="Jazyk"><button aria-pressed="true">CS</button><button aria-pressed="false">EN</button><button aria-pressed="false">DE</button></div>
