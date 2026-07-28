@@ -96,6 +96,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .intro .iskip{position:absolute;bottom:18px;left:0;right:0;text-align:center;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,241,236,.4)}
 body.intro-lock{overflow:hidden}
 /* nástup obsahu hero po odhalení */
+body.with-intro .site-header{transform:translateY(-100%);transition:transform .55s var(--ease)}
+body.with-intro.intro-done .site-header{transform:none;transition-delay:.18s}
 body.with-intro .hero-inner>*,body.with-intro .strip-band{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
 body.with-intro .hero .ph{transform:scale(1.06);transition:opacity .9s var(--ease),transform 1.5s var(--ease)}
 body.with-intro.intro-done .hero-inner>*,body.with-intro.intro-done .strip-band{opacity:1;transform:none}
