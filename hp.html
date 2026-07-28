@@ -204,8 +204,8 @@ body.with-intro.intro-done .strip-band{transition-delay:.55s}
 .hero .ph.is-hidden{opacity:0}
 .hero .cred{position:absolute;right:14px;bottom:10px;z-index:1;font-family:var(--font-mono);font-size:9px;letter-spacing:.02em;color:rgba(240,241,236,.55);text-align:right;transition:opacity .4s var(--ease)}
 .hero .shade{position:absolute;inset:0;z-index:0;background:
-  radial-gradient(160% 170% at 0% 100%,rgba(3,16,10,.96),rgba(3,16,10,.8) 30%,rgba(3,16,10,.5) 55%,rgba(3,16,10,.18) 76%,rgba(3,16,10,0) 92%),
-  linear-gradient(to top,rgba(3,16,10,.92),rgba(3,16,10,.55) 30%,rgba(3,16,10,0) 60%)}
+  radial-gradient(160% 170% at 0% 100%,rgba(2,10,6,.97),rgba(2,10,6,.82) 30%,rgba(2,10,6,.52) 55%,rgba(2,10,6,.18) 76%,rgba(2,10,6,0) 92%),
+  linear-gradient(to top,rgba(2,10,6,.94),rgba(2,10,6,.58) 30%,rgba(2,10,6,0) 60%)}
 
 .hero-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:clamp(18px,2.6vw,32px)}
 .hero-inner{max-width:var(--max);margin-inline:auto;width:100%;padding:calc(var(--header-h) + clamp(24px,3vw,48px)) var(--gutter) clamp(24px,3vw,48px);flex:1;display:flex;flex-direction:column;justify-content:center}
@@ -578,17 +578,19 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
 })();
 
 /* Rotace přídomku + fotky na pozadí (crossfade). Všechny snímky vlastní
-   (archiv Besedy / Pavel) — kompletních 9 hesel dle brand boardu. */
+   (archiv Besedy / Pavel) — kompletních 9 hesel dle brand boardu.
+   pos = volitelný background-position pro doladění výřezu (default center). */
 const HERO_SLIDES = [
   {w:'historií',    img:'assets/rytir_hero.jpg?v=2'},
-  {w:'vínem',       img:'assets/vino.jpg?v=2'},
-  {w:'létem',       img:'assets/vinobrani.jpg'},
-  {w:'divadlem',    img:'assets/divadlem.webp'},
-  {w:'hudbou',      img:'assets/hudbou.jpg'},
-  {w:'objevováním', img:'assets/hero_2.jpg'},
+  {w:'vínem',       img:'assets/vinem.jpg'},
+  {w:'létem',       img:'assets/letem.jpeg'},
+  {w:'divadlem',    img:'assets/divadlem_4.jpeg'},
+  {w:'hudbou',      img:'assets/hudbou.jpeg'},
+  {w:'objevováním', img:'assets/objevovanim.jpg'},
   {w:'pohybem',     img:'assets/pohybem.webp'},
-  {w:'adventem',    img:'assets/adventem.jpeg'},
-  {w:'výhledem',    img:'assets/vyhledem.jpg'},
+  {w:'adventem',    img:'assets/adventem_2.jpg'},
+  // {w:'vánocemi', img:'assets/vanocemi.jpg'}, — skryto (foto zůstává v assets)
+  {w:'výhledem',    img:'assets/vyhledem.jpg?v=2'},
 ];
 const CYCLE = 3000; // ms na jedno heslo; délka prolnutí (0.9s) je v CSS u .ph i .pw
 const heroWord = document.getElementById('heroWord');
@@ -607,6 +609,7 @@ if(heroWord && !matchMedia('(prefers-reduced-motion:reduce)').matches){
     /* text i foto = dvě vrstvy, jeden crossfade: stejný start, stejná délka */
     wBack.textContent = s.w;
     phBack.style.backgroundImage = `url('${s.img}')`;
+    phBack.style.backgroundPosition = s.pos || 'center';
     heroCred.textContent = s.cred ? `Foto placeholder · ${s.cred}` : '';
     wBack.classList.remove('is-hidden');  wFront.classList.add('is-hidden');
     phBack.classList.remove('is-hidden'); phFront.classList.add('is-hidden');
