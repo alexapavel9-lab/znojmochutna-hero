@@ -79,6 +79,29 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 /* rotace přídomku: slovo stojí, mění se synchronně s crossfadem fota (JS) */
 
 /* ============================================================
+   INTRO — jednou za session: ochutnávka přídomků → opona → hero
+   ============================================================ */
+.intro{position:fixed;inset:0;z-index:100;background:var(--brand-green);display:grid;place-items:center;cursor:pointer;transition:transform .7s cubic-bezier(.7,0,.2,1)}
+.intro.leave{transform:translateY(-100%)}
+.intro-inner{display:flex;flex-direction:column;align-items:center;gap:14px;opacity:0;animation:introIn .5s .12s var(--ease) forwards;text-align:center;padding:20px}
+@keyframes introIn{to{opacity:1}}
+.intro .iwm{font-weight:700;font-size:clamp(36px,6vw,68px);letter-spacing:-.03em;color:#F0F1EC;line-height:1}
+.intro .iwm i{font-style:normal;font-family:var(--font-mono);font-weight:400;letter-spacing:-.04em;color:var(--mint)}
+.intro .iword{font-family:var(--font-mono);font-size:clamp(24px,3.6vw,42px);letter-spacing:-.03em;color:var(--mint);line-height:1.15;min-height:1.2em}
+.intro .iskip{position:absolute;bottom:18px;left:0;right:0;text-align:center;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,241,236,.4)}
+body.intro-lock{overflow:hidden}
+/* nástup obsahu hero po odhalení */
+body.with-intro .hero-inner>*,body.with-intro .strip-band{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+body.with-intro .hero .ph{transform:scale(1.06);transition:opacity .9s var(--ease),transform 1.5s var(--ease)}
+body.with-intro.intro-done .hero-inner>*,body.with-intro.intro-done .strip-band{opacity:1;transform:none}
+body.with-intro.intro-done .hero .ph{transform:scale(1)}
+body.with-intro.intro-done .hero-inner>:nth-child(1){transition-delay:.1s}
+body.with-intro.intro-done .hero-inner>:nth-child(2){transition-delay:.2s}
+body.with-intro.intro-done .hero-inner>:nth-child(3){transition-delay:.3s}
+body.with-intro.intro-done .hero-inner>:nth-child(4){transition-delay:.4s}
+body.with-intro.intro-done .strip-band{transition-delay:.55s}
+
+/* ============================================================
    HEADER + NAV
    ============================================================ */
 .site-header{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--line);transition:background .4s var(--ease),border-color .4s var(--ease)}
@@ -289,7 +312,15 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
-<body>
+<body class="with-intro">
+
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-inner">
+    <div class="iwm"><b>Znojmo</b> <i>chutná</i></div>
+    <div class="iword" id="iword">vínem</div>
+  </div>
+  <div class="iskip">kliknutím přeskočíte</div>
+</div>
 
 <header class="site-header" id="header">
   <div class="bar">
@@ -510,6 +541,38 @@ header.addEventListener('focusout',e=>{if(!header.contains(e.relatedTarget))sche
 document.getElementById('scrim').addEventListener('click',closeMenu);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
 
+/* ============================================================
+   INTRO — jednou za session: wordmark → ochutnávka přídomků →
+   opona nahoru → stagger nástup hero. Klik/Esc přeskočí.
+   ============================================================ */
+(function(){
+  const intro = document.getElementById('intro');
+  if(!intro) return;
+  const skipAll = ()=>{ document.body.classList.remove('with-intro'); intro.remove(); };
+  const force = /[?&]intro/.test(location.search); // ?intro = přehrát vždy (demo/test)
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches || (!force && sessionStorage.getItem('zchIntro'))){ skipAll(); return; }
+  document.body.classList.add('intro-lock');
+  const IWORDS = ['vínem','divadlem','létem','výhledem','historií']; // poslední = start slideshow
+  const wEl = document.getElementById('iword');
+  let i = 1, finished = false;
+  const cycle = setInterval(()=>{
+    wEl.textContent = IWORDS[i]; i++;
+    if(i >= IWORDS.length){ clearInterval(cycle); setTimeout(finish, 480); }
+  }, 175);
+  function finish(){
+    if(finished) return; finished = true;
+    clearInterval(cycle);
+    sessionStorage.setItem('zchIntro','1');
+    intro.classList.add('leave');
+    document.body.classList.remove('intro-lock');
+    document.body.classList.add('intro-done');
+    dispatchEvent(new Event('zch:introdone'));
+    setTimeout(()=>intro.remove(), 800);
+  }
+  intro.addEventListener('click', finish);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') finish(); });
+})();
+
 /* Rotace přídomku + fotky na pozadí (crossfade). Všechny snímky vlastní
    (archiv Besedy / Pavel) — kompletních 9 hesel dle brand boardu. */
 const HERO_SLIDES = [
@@ -534,7 +597,7 @@ if(heroWord && !matchMedia('(prefers-reduced-motion:reduce)').matches){
   let wBack   = heroWord.querySelector('.pw-b');
   let si = HERO_SLIDES.findIndex(s=>s.w===wFront.textContent.trim());
   if(si < 0) si = 0;
-  setInterval(()=>{
+  const startRotace = ()=>setInterval(()=>{
     si = (si+1) % HERO_SLIDES.length;
     const s = HERO_SLIDES[si];
     /* text i foto = dvě vrstvy, jeden crossfade: stejný start, stejná délka */
@@ -546,6 +609,12 @@ if(heroWord && !matchMedia('(prefers-reduced-motion:reduce)').matches){
     [wFront, wBack] = [wBack, wFront];
     [phFront, phBack] = [phBack, phFront];
   }, CYCLE);
+  /* s intrem startuje rotace až po odhalení, jinak hned */
+  if(document.body.classList.contains('with-intro')){
+    addEventListener('zch:introdone', startRotace, {once:true});
+  } else {
+    startRotace();
+  }
 }
 
 /* Theme toggle */
