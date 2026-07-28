@@ -296,7 +296,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 @media (max-width:1160px){
   .nav,.tools .icon-btn.search span,.strip-head{display:none}
   .burger{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;color:var(--ink);margin-inline-start:auto}
-  .tools{margin-inline-start:0;gap:4px}
+  .tools{margin-inline-start:auto;gap:8px}
   .mega-wrap{display:none}
   .strip{grid-template-columns:1fr}
   .strip-cards{grid-template-columns:1fr}
@@ -350,8 +350,15 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .f-legal{gap:12px;font-size:12px}
 }
 @media (max-width:560px){
-  .bar{gap:14px}
-  .bar .icon-btn.search,.bar .lang,.bar .theme-toggle,.bar .btn-tickets{display:none}
+  .bar{gap:12px}
+  .bar .lang,.bar .theme-toggle{display:none}
+  /* hledání jen jako ikona */
+  .bar .icon-btn.search{padding:0;width:40px;justify-content:center}
+  /* logo pod sebou */
+  .wordmark{flex-direction:column;align-items:flex-start;gap:0;line-height:1;font-size:17px}
+  .wordmark i{font-size:15px;margin-top:2px}
+  /* Vstupenky zůstávají v liště, kompaktní */
+  .bar .btn-tickets{font-size:13px;padding:9px 14px;margin-inline-start:0}
   .hero-actions{flex-direction:column;align-items:stretch}
   .hero-actions .chips{width:100%;margin-inline-start:0}
   .btn{width:100%;justify-content:center}
@@ -547,11 +554,7 @@ Object.entries(MENU).forEach(([key,data],i)=>{
   mob.appendChild(el(`<details class="m-sec"><summary><span class="m-num">0${i+1}</span><span class="m-label">${data.label}</span><span class="plus">+</span></summary><div class="m-body">${links}${data.action?`<a class="m-action" href="#">${data.action.t} →</a>`:''}</div></details>`));
 });
 
-/* Mobile drawer utilities — Vstupenky + Hledat nahoře, jazyk + téma dole */
-mob.insertAdjacentHTML('afterbegin', `<button class="m-search" type="button">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Hledat
-</button>`);
-mob.insertAdjacentHTML('afterbegin', `<a class="m-tickets" href="#">Vstupenky</a>`);
+/* Mobile drawer utilities — Vstupenky i Hledat jsou v liště; v draweru jen sekce + jazyk/téma dole */
 mob.insertAdjacentHTML('beforeend', `<div class="m-foot">
   <div class="lang" role="group" aria-label="Jazyk"><button aria-pressed="true">CS</button><button aria-pressed="false">EN</button><button aria-pressed="false">DE</button></div>
   <button class="m-theme" aria-label="Přepnout světlý / tmavý režim">Tmavý / světlý</button>
