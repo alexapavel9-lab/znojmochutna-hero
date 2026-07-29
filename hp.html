@@ -350,9 +350,13 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .m-sec .m-label{font-size:24px;font-weight:600;letter-spacing:-.015em}
   .m-sec .plus{margin-left:auto;color:var(--mint);font-size:24px;font-weight:300;line-height:.8;transition:transform .25s var(--ease)}
   .m-sec[open]>summary .plus{transform:rotate(45deg)}
-  .m-sec .m-body{padding:2px 2px 20px 34px;display:flex;flex-direction:column}
+  .m-sec .m-body{padding:0 2px 20px 34px;display:flex;flex-direction:column}
+  .m-sec .m-group{display:flex;flex-direction:column;padding:2px 0 18px}
+  .m-sec .m-group:last-of-type{padding-bottom:8px}
+  .m-sec .m-group-title{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.14em;font-size:10.5px;color:var(--mint);padding:4px 0 6px}
   .m-sec .m-body a{padding:10px 0;font-size:16.5px;color:var(--ink-dim);border-bottom:1px dashed rgba(240,241,236,.09)}
   .m-sec .m-body a:last-child{border-bottom:none}
+  .m-sec .m-body a.m-more{color:var(--ink);font-weight:500;border-bottom:none}
   .m-sec .m-body a.m-action{color:var(--mint);font-weight:500}
   /* spodní utility */
   .m-foot{display:flex;align-items:center;gap:12px;padding-top:20px;margin-top:auto;border-top:1px solid var(--line-soft)}
@@ -557,8 +561,8 @@ const MENU = {
     featured:{theme:'wine',ghost:'♦',kicker:'Nenechte si ujít',title:'Znojemské vinobraní 2026',meta:'12.–14. 9. · centrum',img:'assets/vinobrani.jpg'} },
   objevuj: { label:'Objevuj Znojmo',
     columns:[
-      {title:'Místa & památky', links:[{t:'Radniční věž'},{t:'Rotunda sv. Kateřiny'},{t:'Znojemské podzemí'},{t:'Městské divadlo'},{t:'Mikulášský kostel'},{t:'Vlkova věž'},{t:'Znojemský hrad'},{t:'Všechna místa',arrow:true}]},
-      {title:'Tematické', links:[{t:'Cykloturistika'},{t:'Pěší turistika'},{t:'NP Podyjí'},{t:'Vodáctví na Dyji'},{t:'Znojmo s dětmi'},{t:'Znojmo za vínem'},{t:'Prohlídky s průvodcem'},{t:'Prohlídka historie města'}]},
+      {title:'Místa & památky', links:[{t:'Radniční věž'},{t:'Rotunda sv. Kateřiny'},{t:'Znojemské podzemí'},{t:'Městské divadlo'},{t:'Mikulášský kostel'},{t:'Znojemský hrad'},{t:'Všechna místa',arrow:true}]},
+      {title:'Tematické', links:[{t:'Cykloturistika'},{t:'Pěší turistika'},{t:'NP Podyjí'},{t:'Vodáctví na Dyji'},{t:'Znojmo s dětmi'},{t:'Prohlídky s průvodcem'},{t:'Prohlídka historie města'}]},
       {title:'Další informace', links:[{t:'Kde sportovat'},{t:'Kde se vykoupat'},{t:'Historie města'}]},
     ],
     action:{t:'Interaktivní mapa',note:'místa na mapě',icon:'map'},
@@ -613,11 +617,22 @@ Object.entries(MENU).forEach(([key,data])=>{
   mega.appendChild(el(`<div class="panel" data-panel="${key}" data-cols="${data.columns.length}">${cols}<a class="col feat ${f.theme}${f.img?' photo':''}" href="#">${fPhoto}<span class="ghost">${f.ghost}</span><span class="kicker">${f.kicker}</span><span class="f-title">${f.title}</span><span class="f-meta">${f.meta}</span><span class="f-go">Zobrazit ${arrow}</span></a></div>`));
 });
 
-/* Mobile accordion — číslované sekce, akce v mint */
+/* Mobile accordion — číslované sekce; skupiny dle sloupců megamenu,
+   max 4 položky na skupinu + řádek „vše" (existující arrow položka, jinak Zobrazit vše) */
 const mob = document.getElementById('mobileNav');
+const M_LIMIT = 4;
 Object.entries(MENU).forEach(([key,data],i)=>{
-  const links = data.columns.flatMap(c=>c.links).map(l=>`<a href="#">${l.t}</a>`).join('');
-  mob.appendChild(el(`<details class="m-sec"><summary><span class="m-num">0${i+1}</span><span class="m-label">${data.label}</span><span class="plus">+</span></summary><div class="m-body">${links}${data.action?`<a class="m-action" href="#">${data.action.t} →</a>`:''}</div></details>`));
+  const groups = data.columns.map(c=>{
+    const allItem = c.links.find(l=>l.arrow);
+    const plain = c.links.filter(l=>!l.arrow);
+    const more = allItem ? allItem.t : (plain.length>M_LIMIT ? 'Zobrazit vše' : null);
+    return `<div class="m-group">
+      <div class="m-group-title">${c.title}</div>
+      ${plain.slice(0,M_LIMIT).map(l=>`<a href="#">${l.t}</a>`).join('')}
+      ${more?`<a class="m-more" href="#">${more} →</a>`:''}
+    </div>`;
+  }).join('');
+  mob.appendChild(el(`<details class="m-sec"><summary><span class="m-num">0${i+1}</span><span class="m-label">${data.label}</span><span class="plus">+</span></summary><div class="m-body">${groups}${data.action?`<a class="m-action" href="#">${data.action.t} →</a>`:''}</div></details>`));
 });
 
 /* Mobile drawer utilities — Vstupenky i Hledat jsou v liště; v draweru jen sekce + jazyk/téma dole */
