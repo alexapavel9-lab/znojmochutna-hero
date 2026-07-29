@@ -569,7 +569,7 @@ const MENU = {
     featured:{theme:'map',ghost:'▲',kicker:'Výhled',title:'Radniční věž',meta:'80 m · panorama města',img:'assets/radnice.jpg'} },
   vino: { label:'Víno & sklepy',
     columns:[
-      {title:'Přehled', links:[{t:'Víno & sklepy',d:'úvod sekce'},{t:'Sklepní uličky'},{t:'Vinařství'},{t:'VOC Znojmo'},{t:'Vinařské akce'}]},
+      {title:'Přehled', mAll:true, links:[{t:'Víno & sklepy',d:'úvod sekce'},{t:'Sklepní uličky'},{t:'Vinařství'},{t:'VOC Znojmo'},{t:'Vinařské akce'}]},
       {title:'Za vínem', links:[{t:'Vinařské trasy'},{t:'Degustace'},{t:'Enotéka'},{t:'Znojemské vinobraní'}]},
       {title:'Nejbližší vinařské akce', links:[{t:'Otevřené sklepy Šatov',d:'so 6. 9.'},{t:'Degustace VOC Znojmo',d:'pá 12. 9.'},{t:'Znojemské vinobraní',d:'12.–14. 9.'}]},
     ],
@@ -625,10 +625,11 @@ Object.entries(MENU).forEach(([key,data],i)=>{
   const groups = data.columns.map(c=>{
     const allItem = c.links.find(l=>l.arrow);
     const plain = c.links.filter(l=>!l.arrow);
-    const more = allItem ? allItem.t : (plain.length>M_LIMIT ? 'Zobrazit vše' : null);
+    const shown = c.mAll ? plain : plain.slice(0,M_LIMIT);
+    const more = allItem ? allItem.t : (shown.length<plain.length ? 'Zobrazit vše' : null);
     return `<div class="m-group">
       <div class="m-group-title">${c.title}</div>
-      ${plain.slice(0,M_LIMIT).map(l=>`<a href="#">${l.t}</a>`).join('')}
+      ${shown.map(l=>`<a href="#">${l.t}</a>`).join('')}
       ${more?`<a class="m-more" href="#">${more} →</a>`:''}
     </div>`;
   }).join('');
