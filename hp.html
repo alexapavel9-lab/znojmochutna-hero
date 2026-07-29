@@ -553,7 +553,7 @@ const MENU = {
       {title:'Kategorie', links:[{t:'Divadlo'},{t:'Hudba'},{t:'Kino'},{t:'Festivaly'},{t:'Víno & gastro'},{t:'Rodina & děti'},{t:'Všech 16 kategorií',arrow:true}]},
       {title:'Významné akce', links:[{t:'Znojemské vinobraní'},{t:'Kulturní léto'},{t:'Advent'},{t:'800 let města'}]},
     ],
-    action:{t:'Přidat akci',note:'pro pořadatele',icon:'plus'},
+    action:{t:'Přidat akci',note:'pro pořadatele',icon:'plus'}, actionCol:0,
     featured:{theme:'wine',ghost:'♦',kicker:'Nenechte si ujít',title:'Znojemské vinobraní 2026',meta:'12.–14. 9. · centrum',img:'assets/vinobrani.jpg'} },
   objevuj: { label:'Objevuj Znojmo',
     columns:[
@@ -606,7 +606,7 @@ Object.entries(MENU).forEach(([key,data])=>{
     <div class="col">
       <div class="col-title">${c.title}</div>
       ${c.links.map(l=>`<a class="m-link" href="#"><span class="t">${l.t}${l.arrow?arrow:''}</span>${l.d?`<span class="d">${l.d}</span>`:''}</a>`).join('')}
-      ${ci===data.columns.length-1 && data.action?`<div class="col-action"><a class="action-btn" href="#"><span class="a-left">${AICONS[data.action.icon]||''}<span>${data.action.t}</span></span><small>${data.action.note}</small></a></div>`:''}
+      ${ci===(data.actionCol??data.columns.length-1) && data.action?`<div class="col-action"><a class="action-btn" href="#"><span class="a-left">${AICONS[data.action.icon]||''}<span>${data.action.t}</span></span><small>${data.action.note}</small></a></div>`:''}
     </div>`).join('');
   const f=data.featured;
   const fPhoto = f.img ? `<span class="f-ph" style="background-image:url('${f.img}')"></span>` : '';
