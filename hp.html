@@ -170,7 +170,7 @@ body.nav-open .b-lines i:last-child{top:6px;width:22px;left:0;right:auto;transfo
 .m-link .d{font-size:12.5px;color:var(--ink-dim)}
 .m-link:hover .t{color:var(--mint-hi)}
 .col-action{margin-top:auto;padding-top:16px}
-.action-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:11px;border:1px dashed var(--mono);color:var(--ink);font-weight:500;font-size:14px;width:100%;transition:.18s var(--ease)}
+.action-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:11px;border:1px solid var(--mono);color:var(--ink);font-weight:500;font-size:14px;width:100%;transition:.18s var(--ease)}
 .action-btn:hover{border-color:var(--mint);color:var(--mint-hi);border-style:solid}
 .action-btn small{font-family:var(--font-mono);font-size:10px;color:var(--mono);text-transform:uppercase;letter-spacing:.1em}
 /* featured — barevné akcenty per kapitola (vinobraní vínová, atd.) */
@@ -520,6 +520,7 @@ const MENU = {
     columns:[
       {title:'Přehled', links:[{t:'Víno & sklepy',d:'úvod sekce'},{t:'Sklepní uličky'},{t:'Vinařské akce'}]},
       {title:'Za vínem', links:[{t:'Vinařské trasy'},{t:'Degustace'},{t:'Vinobraní'}]},
+      {title:'Nejbližší vinařské akce', links:[{t:'Otevřené sklepy Šatov',d:'so 6. 9.'},{t:'Degustace VOC Znojmo',d:'pá 12. 9.'},{t:'Znojemské vinobraní',d:'12.–14. 9.'}]},
     ],
     action:{t:'Přidat akci',note:'pro pořadatele'},
     featured:{theme:'cellar',ghost:'❦',kicker:'Ochutnejte',title:'Sklepní ulička Šatov',meta:'kraj vína · celoročně',img:'assets/vino.jpg?v=2'} },
