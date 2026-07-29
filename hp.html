@@ -171,6 +171,8 @@ body.nav-open .b-lines i:last-child{top:6px;width:22px;left:0;right:auto;transfo
 .m-link:hover .t{color:var(--mint-hi)}
 .col-action{margin-top:auto;padding-top:16px}
 .action-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:11px;border:1px solid var(--mono);color:var(--ink);font-weight:500;font-size:14px;width:100%;transition:.18s var(--ease)}
+.action-btn .a-left{display:inline-flex;align-items:center;gap:9px}
+.action-btn .a-left svg{width:16px;height:16px;color:var(--mint);flex:none}
 .action-btn:hover{border-color:var(--mint);color:var(--mint-hi);border-style:solid}
 .action-btn small{font-family:var(--font-mono);font-size:10px;color:var(--mono);text-transform:uppercase;letter-spacing:.1em}
 /* featured — barevné akcenty per kapitola (vinobraní vínová, atd.) */
@@ -506,7 +508,7 @@ const MENU = {
       {title:'Kategorie', links:[{t:'Divadlo'},{t:'Hudba'},{t:'Festivaly'},{t:'Víno'},{t:'Pro rodiny'},{t:'Všech 16 kategorií',arrow:true}]},
       {title:'Významné akce', links:[{t:'Znojemské vinobraní'},{t:'Kulturní léto'},{t:'Advent'},{t:'800 let města'}]},
     ],
-    action:{t:'Přidat akci',note:'pro pořadatele'},
+    action:{t:'Přidat akci',note:'pro pořadatele',icon:'plus'},
     featured:{theme:'wine',ghost:'♦',kicker:'Nenechte si ujít',title:'Znojemské vinobraní 2026',meta:'12.–14. 9. · centrum',img:'assets/vinobrani.jpg'} },
   objevuj: { label:'Objevuj Znojmo',
     columns:[
@@ -514,7 +516,7 @@ const MENU = {
       {title:'Tematické', links:[{t:'Cykloturistika'},{t:'Pěší turistika'},{t:'NP Podyjí'},{t:'Vodáctví na Dyji'},{t:'Znojmo s dětmi'},{t:'Znojmo za vínem'},{t:'Prohlídky s průvodcem'},{t:'Historie města'}]},
       {title:'Další informace', links:[{t:'Kde se najíst'},{t:'Kde sportovat'},{t:'Kde se vykoupat'}]},
     ],
-    action:{t:'Interaktivní mapa',note:'místa na mapě'},
+    action:{t:'Interaktivní mapa',note:'místa na mapě',icon:'map'},
     featured:{theme:'map',ghost:'▲',kicker:'Výhled',title:'Radniční věž',meta:'80 m · panorama města',img:'assets/radnice.jpg'} },
   vino: { label:'Víno & sklepy',
     columns:[
@@ -522,7 +524,7 @@ const MENU = {
       {title:'Za vínem', links:[{t:'Vinařské trasy'},{t:'Degustace'},{t:'Znojemské vinobraní'}]},
       {title:'Nejbližší vinařské akce', links:[{t:'Otevřené sklepy Šatov',d:'so 6. 9.'},{t:'Degustace VOC Znojmo',d:'pá 12. 9.'},{t:'Znojemské vinobraní',d:'12.–14. 9.'}]},
     ],
-    action:{t:'Přidat akci',note:'pro pořadatele'},
+    action:{t:'Přidat akci',note:'pro pořadatele',icon:'plus'},
     featured:{theme:'cellar',ghost:'❦',kicker:'Ochutnejte',title:'Sklepní ulička Šatov',meta:'kraj vína · celoročně',img:'assets/vino.jpg?v=2'} },
   planovani: { label:'Plánování',
     columns:[
@@ -530,7 +532,7 @@ const MENU = {
       {title:'Vstupenky', links:[{t:'Kde koupit'},{t:'Online (GoOut)'},{t:'Kombinované vstupné'}]},
       {title:'Ke stažení', links:[{t:'Mapy'},{t:'Průvodci'},{t:'Programy (PDF)'}]},
     ],
-    action:{t:'Naplánuj si den',note:'krok za krokem'},
+    action:{t:'Naplánuj si den',note:'krok za krokem',icon:'calendar'},
     featured:{theme:'plan',ghost:'✳',kicker:'Newsletter',title:'Co se ve Znojmě chystá',meta:'tipy jednou týdně',img:'assets/hudba_2.jpeg'} },
 };
 
@@ -543,6 +545,12 @@ const STRIP = [
 
 const el = (h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstElementChild;};
 const arrow = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+/* ikony akčních tlačítek megamenu */
+const AICONS = {
+  plus:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>`,
+  map:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg>`,
+  calendar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>`,
+};
 
 /* Nav + mega */
 const nav = document.getElementById('nav');
@@ -553,7 +561,7 @@ Object.entries(MENU).forEach(([key,data])=>{
     <div class="col">
       <div class="col-title">${c.title}</div>
       ${c.links.map(l=>`<a class="m-link" href="#"><span class="t">${l.t}${l.arrow?arrow:''}</span>${l.d?`<span class="d">${l.d}</span>`:''}</a>`).join('')}
-      ${ci===data.columns.length-1 && data.action?`<div class="col-action"><a class="action-btn" href="#"><span>${data.action.t}</span><small>${data.action.note}</small></a></div>`:''}
+      ${ci===data.columns.length-1 && data.action?`<div class="col-action"><a class="action-btn" href="#"><span class="a-left">${AICONS[data.action.icon]||''}<span>${data.action.t}</span></span><small>${data.action.note}</small></a></div>`:''}
     </div>`).join('');
   const f=data.featured;
   const fPhoto = f.img ? `<span class="f-ph" style="background-image:url('${f.img}')"></span>` : '';
