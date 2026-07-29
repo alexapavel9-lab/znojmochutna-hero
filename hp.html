@@ -134,7 +134,7 @@ body.with-intro.intro-done .strip-band{transition-delay:.55s}
 :root[data-theme="light"] .btn-tickets{color:#F0F1EC}
 .icon-btn{height:40px;padding:0 14px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-dim);border:1px solid transparent;transition:.2s var(--ease)}
 .icon-btn:hover{color:var(--ink);background:var(--chip)}
-.icon-btn svg{width:16px;height:16px}
+.icon-btn svg{width:20px;height:20px}
 .lang{display:inline-flex;align-items:center;background:var(--chip);border-radius:10px;padding:3px;gap:2px}
 .lang button{font-family:var(--font-mono);font-size:12px;padding:6px 9px;border-radius:7px;color:var(--ink-dim);letter-spacing:.05em}
 .lang button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink)}
@@ -296,6 +296,8 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 #mobileNav{display:none}
 @media (max-width:1160px){
   .nav,.tools .icon-btn.search span,.strip-head{display:none}
+  .bar .icon-btn.search{padding:0;width:46px;justify-content:center}
+  .bar .icon-btn.search svg{width:24px;height:24px}
   .burger{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;color:var(--ink);margin-inline-start:auto}
   .tools{margin-inline-start:auto;gap:12px}
   .mega-wrap{display:none}
@@ -360,9 +362,6 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 @media (max-width:560px){
   .bar{gap:16px}
   .bar .lang,.bar .theme-toggle{display:none}
-  /* hledání jen jako ikona, větší */
-  .bar .icon-btn.search{padding:0;width:46px;justify-content:center}
-  .bar .icon-btn.search svg{width:24px;height:24px}
   /* logo pod sebou, větší */
   .wordmark{flex-direction:column;align-items:flex-start;gap:0;line-height:1;font-size:19.5px}
   .wordmark i{font-size:17px;margin-top:2px}
