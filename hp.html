@@ -357,7 +357,10 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .m-sec .m-body a{padding:10px 0;font-size:16.5px;color:var(--ink-dim);border-bottom:1px dashed rgba(240,241,236,.09)}
   .m-sec .m-body a:last-child{border-bottom:none}
   .m-sec .m-body a.m-more{color:var(--ink);font-weight:500;border-bottom:none}
-  .m-sec .m-body a.m-action{color:var(--mint);font-weight:500}
+  .m-sec .m-body a.m-action{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;color:var(--mint);font-weight:500;font-size:15.5px}
+  .m-sec .m-body a.m-action .a-left{display:inline-flex;align-items:center;gap:9px}
+  .m-sec .m-body a.m-action .a-left svg{width:16px;height:16px;flex:none}
+  .m-sec .m-body a.m-action small{font-family:var(--font-mono);font-size:9.5px;color:var(--mono);text-transform:uppercase;letter-spacing:.1em}
   /* spodní utility */
   .m-foot{display:flex;align-items:center;gap:12px;padding-top:20px;margin-top:auto;border-top:1px solid var(--line-soft)}
   .m-foot .theme-toggle{width:44px;height:44px;margin-inline-start:auto;color:var(--ink-dim)}
@@ -633,7 +636,7 @@ Object.entries(MENU).forEach(([key,data],i)=>{
       ${more?`<a class="m-more" href="#">${more} →</a>`:''}
     </div>`;
   }).join('');
-  mob.appendChild(el(`<details class="m-sec"><summary><span class="m-num">0${i+1}</span><span class="m-label">${data.label}</span><span class="plus">+</span></summary><div class="m-body">${groups}${data.action?`<a class="m-action" href="#">${data.action.t} →</a>`:''}</div></details>`));
+  mob.appendChild(el(`<details class="m-sec"><summary><span class="m-num">0${i+1}</span><span class="m-label">${data.label}</span><span class="plus">+</span></summary><div class="m-body">${groups}${data.action?`<a class="m-action" href="#"><span class="a-left">${AICONS[data.action.icon]||''}<span>${data.action.t}</span></span><small>${data.action.note}</small></a>`:''}</div></details>`));
 });
 
 /* Mobile drawer utilities — Vstupenky i Hledat jsou v liště; v draweru jen sekce + jazyk/téma dole */
