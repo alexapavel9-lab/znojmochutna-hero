@@ -160,6 +160,7 @@ body.nav-open .b-lines i:last-child{top:6px;width:22px;left:0;right:auto;transfo
 .site-header.open .mega-wrap{opacity:1;transform:none;pointer-events:auto}
 .mega{width:min(calc(100% - 2*var(--gutter)), var(--max));margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
 .panel{display:none;grid-template-columns:1fr 1fr 1fr .95fr}
+.panel[data-cols="2"]{grid-template-columns:1.1fr 1.1fr 1fr}
 .panel.active{display:grid}
 .col{padding:26px 26px 30px;border-right:1px solid var(--line-soft);display:flex;flex-direction:column;gap:4px}
 .col-title{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.12em;font-size:10.5px;color:var(--mono);margin-bottom:12px}
@@ -510,15 +511,14 @@ const MENU = {
   objevuj: { label:'Objevuj Znojmo',
     columns:[
       {title:'Místa & památky', links:[{t:'Radniční věž'},{t:'Rotunda sv. Kateřiny'},{t:'Znojemské podzemí'},{t:'Mikulášský kostel'},{t:'Vlkova věž'},{t:'Všechna místa',arrow:true}]},
-      {title:'Mapa & trasy', links:[{t:'Interaktivní mapa'},{t:'Pěší trasy'},{t:'Cyklotrasy'},{t:'NP Podyjí'},{t:'Vodáctví na Dyji'}]},
+      {title:'Oblasti zájmu', links:[{t:'Interaktivní mapa'},{t:'Cykloturistika'},{t:'Pěší turistika'},{t:'NP Podyjí'},{t:'Vodáctví na Dyji'}]},
       {title:'Tematické', links:[{t:'Znojmo s dětmi'},{t:'Znojmo na kole'},{t:'Znojmo za vínem',d:'→ Víno & sklepy'},{t:'Prohlídky s průvodcem'},{t:'Vyhlídky & zajímavá místa'}]},
     ],
     action:{t:'Otevřít mapu',note:'místa na mapě'},
     featured:{theme:'map',ghost:'▲',kicker:'Výhled',title:'Radniční věž',meta:'80 m · panorama města',img:'assets/radnice.jpg'} },
   vino: { label:'Víno & sklepy',
     columns:[
-      {title:'Přehled', links:[{t:'Víno & sklepy',d:'úvod sekce'},{t:'Adresář sklepů'},{t:'Vinařské akce'}]},
-      {title:'Sklepní uličky', links:[{t:'Šatov'},{t:'Nový Šaldorf'},{t:'Hnánice'},{t:'Dyjákovičky'},{t:'Zobrazit vše',arrow:true}]},
+      {title:'Přehled', links:[{t:'Víno & sklepy',d:'úvod sekce'},{t:'Sklepní uličky'},{t:'Vinařské akce'}]},
       {title:'Za vínem', links:[{t:'Vinařské trasy'},{t:'Degustace'},{t:'Vinobraní'}]},
     ],
     action:{t:'Naplánovat cestu za vínem',note:'trasy + sklepy'},
@@ -556,7 +556,7 @@ Object.entries(MENU).forEach(([key,data])=>{
     </div>`).join('');
   const f=data.featured;
   const fPhoto = f.img ? `<span class="f-ph" style="background-image:url('${f.img}')"></span>` : '';
-  mega.appendChild(el(`<div class="panel" data-panel="${key}">${cols}<a class="col feat ${f.theme}${f.img?' photo':''}" href="#">${fPhoto}<span class="ghost">${f.ghost}</span><span class="kicker">${f.kicker}</span><span class="f-title">${f.title}</span><span class="f-meta">${f.meta}</span><span class="f-go">Zobrazit ${arrow}</span></a></div>`));
+  mega.appendChild(el(`<div class="panel" data-panel="${key}" data-cols="${data.columns.length}">${cols}<a class="col feat ${f.theme}${f.img?' photo':''}" href="#">${fPhoto}<span class="ghost">${f.ghost}</span><span class="kicker">${f.kicker}</span><span class="f-title">${f.title}</span><span class="f-meta">${f.meta}</span><span class="f-go">Zobrazit ${arrow}</span></a></div>`));
 });
 
 /* Mobile accordion — číslované sekce, akce v mint */
