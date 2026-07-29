@@ -352,6 +352,11 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .ecard{padding:13px 14px 15px}
   .ecard .et{font-size:15px}
 }
+/* tablet: větší nadpis v heru */
+@media (min-width:561px) and (max-width:1160px){
+  h1{font-size:clamp(54px,8.8vw,82px)}
+  h1 .pridomek{font-size:clamp(48px,8vw,74px)}
+}
 @media (max-width:560px){
   .bar{gap:16px}
   .bar .lang,.bar .theme-toggle{display:none}
