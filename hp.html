@@ -13,7 +13,9 @@
 /* ============================================================
    Znojmo chutná — NOVÁ HP. Převzato z hero.html (zaoblené řešení,
    brand barvy dle Brand Board v3), změny: hero pozadí = FOTO
-   (green duotone), bílá mezera na budoucí obsah, footer beze změny.
+   (green duotone), bílá mezera na budoucí obsah. Footer: statický,
+   komplement menu — brand blok (provozovatel + kontakt + sociálky)
+   a sloupce Na webu / Znojemská Beseda / Kontakt.
    Stará HP zachována v hero.html.
    ============================================================ */
 :root{
@@ -276,10 +278,19 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 .f-news button{padding:0 22px;height:52px;border-radius:12px;background:var(--f-mint);color:#051B11;font-weight:600;flex:none;transition:.2s var(--ease)}
 .f-news button:hover{background:#ADE0B9}
 .f-news .hint{color:var(--f-dim);font-size:12px;margin-top:9px}
-.f-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:clamp(32px,4vw,40px) 0}
+.f-main{display:grid;grid-template-columns:1.45fr 1fr 1fr 1.15fr;gap:32px 24px;padding:clamp(32px,4vw,44px) 0}
+.f-brand .f-wordmark{font-weight:600;font-size:21px;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:.4ch}
+.f-brand .f-wordmark b{font-weight:600;color:var(--f-ink)}
+.f-brand .f-wordmark i{font-style:normal;color:var(--f-mint);font-family:var(--font-mono);font-weight:400;letter-spacing:-.02em}
+.f-about{color:var(--f-dim);font-size:14px;line-height:1.7;max-width:34ch;margin-top:14px}
+.f-brand .f-social{margin-top:20px}
 .f-col h4{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.12em;font-size:11.5px;color:var(--f-mint);margin-bottom:13px}
 .f-col a{display:block;padding:6px 0;color:var(--f-dim);font-size:14px;transition:color .16s var(--ease)}
 .f-col a:hover{color:var(--f-ink)}
+.f-col a.f-action{color:var(--f-mint);font-weight:500;margin-top:4px}
+.f-col a.f-action:hover{color:#ADE0B9}
+.f-contact address{font-style:normal;color:var(--f-dim);font-size:14px;line-height:1.7;padding:6px 0}
+.f-contact address span{display:block}
 .f-bottom{max-width:var(--max);margin-inline:auto;padding:22px var(--gutter);border-top:1px solid var(--f-line);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .f-legal{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:12.5px}
 .f-legal .c,.f-legal a{color:var(--f-dim)}
@@ -307,8 +318,8 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .mega-wrap{display:none}
   .strip{grid-template-columns:1fr}
   .strip-cards{grid-template-columns:repeat(2,1fr);gap:10px}
-  .f-cols{grid-template-columns:repeat(2,1fr)}
-  .f-col:last-child{grid-column:1/-1;padding-top:14px;border-top:1px solid var(--f-line)}
+  .f-main{grid-template-columns:repeat(3,1fr)}
+  .f-brand{grid-column:1/-1;padding-bottom:8px}
   .f-bottom{flex-direction:column;align-items:flex-start}
   /* ---------- mobilní drawer: vždy brand zeleň, stagger nástup ---------- */
   #mobileNav{position:fixed;inset:var(--header-h) 0 0;z-index:55;display:flex;flex-direction:column;background:linear-gradient(180deg,#0D4630,#0A3826);
@@ -353,7 +364,8 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .f-news-row{flex-wrap:wrap}
   .f-news input{min-width:0;flex:1 1 100%}
   .f-news button{flex:1;height:48px}
-  .f-cols{grid-template-columns:1fr 1fr;gap:22px 18px}
+  .f-main{grid-template-columns:1fr 1fr;gap:26px 18px}
+  .f-contact{grid-column:1/-1;padding-top:16px;border-top:1px solid var(--f-line)}
   .f-legal{gap:12px;font-size:12px}
   .ecard{padding:13px 14px 15px}
   .ecard .et{font-size:15px}
@@ -470,7 +482,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   <!-- <span class="f-okurka" aria-hidden="true"></span> — rytina zatím vypnutá -->
   <div class="f-inner">
     <div class="f-cta">
-      <h3>Nosíme na stůl.<br><span>Ochutnáte?</span></h3>
+      <h3><span>Ochutnáte?</span></h3>
       <form class="f-news" onsubmit="return false">
         <div class="f-news-row">
           <input type="email" placeholder="Váš e-mail" aria-label="E-mail">
@@ -479,17 +491,49 @@ h1 .pridomek .pw.is-hidden{opacity:0}
         <p class="hint">Tipy na akce jednou týdně. Kdykoli lze odhlásit.</p>
       </form>
     </div>
-    <div class="f-cols" id="footCols"></div>
+    <div class="f-main">
+      <div class="f-brand">
+        <span class="f-wordmark"><b>Znojmo</b><i>chutná</i></span>
+        <p class="f-about">Kulturní a turistický portál Znojma. Provozuje Znojemská Beseda, příspěvková organizace města Znojma.</p>
+        <div class="f-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h-3a4 4 0 0 0-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none"/></svg></a>
+        </div>
+      </div>
+      <nav class="f-col" aria-label="Sekce webu">
+        <h4>Na webu</h4>
+        <a href="#">Program akcí</a>
+        <a href="#">Objevuj Znojmo</a>
+        <a href="#">Víno &amp; sklepy</a>
+        <a href="#">Plánování návštěvy</a>
+        <a href="#">Vstupenky</a>
+        <a class="f-action" href="#">Přidat akci →</a>
+      </nav>
+      <nav class="f-col" aria-label="Znojemská Beseda">
+        <h4>Znojemská Beseda</h4>
+        <a href="#">Profil organizace</a>
+        <a href="#">Pronájmy prostor</a>
+        <a href="#">Kariéra</a>
+        <a href="#">Press &amp; média</a>
+        <a href="#">Kontakty</a>
+      </nav>
+      <div class="f-col f-contact">
+        <h4>Kontakt</h4>
+        <!-- kontaktní údaje TIC — před nasazením ověřit -->
+        <address>
+          <span>TIC Znojmo</span>
+          <span>Obroková 10, 669 02 Znojmo</span>
+        </address>
+        <a href="tel:+420515222552">+420 515 222 552</a>
+        <a href="mailto:tic@znojemskabeseda.cz">tic@znojemskabeseda.cz</a>
+      </div>
+    </div>
   </div>
   <div class="f-bottom">
     <div class="f-legal">
-      <span class="c">© 2026 Znojemská Beseda</span>
-      <a href="#">Ochrana údajů</a><a href="#">Přístupnost</a><a href="#">Cookies</a>
-    </div>
-    <div class="f-social">
-      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
-      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h-3a4 4 0 0 0-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/></svg></a>
-      <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none"/></svg></a>
+      <span class="c">© 2026 Znojemská Beseda, p. o.</span>
+      <a href="#">Ochrana osobních údajů</a><a href="#">Prohlášení o přístupnosti</a><a href="#">Nastavení cookies</a>
     </div>
   </div>
 </footer>
@@ -505,7 +549,7 @@ const MENU = {
   program: { label:'Program akcí',
     columns:[
       {title:'Přehled', links:[{t:'Všechny akce'},{t:'Kalendář'},{t:'Mapa akcí'}]},
-      {title:'Kategorie', links:[{t:'Divadlo'},{t:'Hudba'},{t:'Festivaly'},{t:'Víno'},{t:'Pro rodiny'},{t:'Všech 16 kategorií',arrow:true}]},
+      {title:'Kategorie', links:[{t:'Divadlo'},{t:'Hudba'},{t:'Kino'},{t:'Festivaly'},{t:'Víno'},{t:'Pro rodiny'},{t:'Všech 16 kategorií',arrow:true}]},
       {title:'Významné akce', links:[{t:'Znojemské vinobraní'},{t:'Kulturní léto'},{t:'Advent'},{t:'800 let města'}]},
     ],
     action:{t:'Přidat akci',note:'pro pořadatele',icon:'plus'},
@@ -587,15 +631,6 @@ mob.insertAdjacentHTML('beforeend', `<div class="m-foot">
 /* Strip cards */
 const stripCards = document.getElementById('stripCards');
 STRIP.forEach(e=>stripCards.appendChild(el(`<a class="ecard" href="#"><span class="cat">${e.cat}</span><span class="et">${e.t}</span><span class="em">${e.m}</span></a>`)));
-
-/* Footer cols — bez Programu akcí (redesign footeru: příští session, nemá 1:1 kopírovat menu) */
-const footCols = document.getElementById('footCols');
-Object.entries(MENU).forEach(([key,data])=>{
-  if(key==='program') return;
-  const links = data.columns.flatMap(c=>c.links).slice(0,4).map(l=>`<a href="#">${l.t}</a>`).join('');
-  footCols.appendChild(el(`<div class="f-col"><h4>${data.label}</h4>${links}</div>`));
-});
-footCols.appendChild(el(`<div class="f-col"><h4>Znojemská Beseda</h4><a href="#">Profil organizace</a><a href="#">Pronájmy prostor</a><a href="#">Kariéra</a><a href="#">Press &amp; novinky</a><a href="#">Kontakty</a></div>`));
 
 /* ============================================================
    Interakce: mega menu (hover + klik + Esc)
