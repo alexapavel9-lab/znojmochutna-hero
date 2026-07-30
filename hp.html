@@ -239,10 +239,16 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 .chip:hover{background:var(--chip-hi);color:var(--ink)}
 .chip::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mint);margin-right:8px;vertical-align:middle}
 
-/* „Nenechte si ujít" pás — karty v zelené headeru přímo na fotce */
-.strip-band{width:100%;border-top:1px solid var(--line-soft)}
+/* „Nenechte si ujít" pás — samostatný tmavý band pod foldem heru
+   (vlastní přepis proměnných: mimo hero by karty spadly do světlého theme) */
+.strip-band{width:100%;background:#051B11;border-top:1px solid rgba(240,241,236,.12);
+  --ink:#F0F1EC;--ink-dim:#CBDED2;--mint:#93D3A2;--mint-hi:#ADE0B9;--mono:#A8C9B6;
+  --line:rgba(240,241,236,.22);--line-soft:rgba(240,241,236,.16);
+  --chip:rgba(240,241,236,.1);--chip-hi:rgba(240,241,236,.2);
+  color:var(--ink)}
 .strip{max-width:var(--max);margin:0 auto;width:100%;padding:22px var(--gutter) clamp(26px,3vw,40px);display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
 .strip-head{display:flex;flex-direction:column;gap:6px;padding-top:4px;white-space:nowrap}
+.strip-head .chips{margin-inline-start:0;margin-top:8px}
 .strip-head .h{font-weight:600;font-size:15px}
 .strip-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .ecard{border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 18px;display:flex;flex-direction:column;gap:10px;transition:.2s var(--ease);background:transparent}
@@ -309,7 +315,9 @@ h1 .pridomek .pw.is-hidden{opacity:0}
    ============================================================ */
 #mobileNav{display:none}
 @media (max-width:1160px){
-  .nav,.tools .icon-btn.search span,.strip-head{display:none}
+  .nav,.tools .icon-btn.search span{display:none}
+  .strip-head{white-space:normal;flex-direction:row;align-items:baseline;column-gap:12px;flex-wrap:wrap;padding-top:0}
+  .strip-head .chips{width:100%;margin-top:2px}
   .bar .icon-btn.search{padding:0;width:46px;justify-content:center}
   .bar .icon-btn.search svg{width:24px;height:24px}
   .hero-actions{row-gap:22px}
@@ -391,7 +399,6 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   /* Vstupenky zůstávají v liště, kompaktní */
   .bar .btn-tickets{font-size:13.5px;padding:10px 15px;margin-inline-start:0}
   .hero-actions{flex-direction:column;align-items:stretch}
-  .hero-actions .chips{width:100%;margin-inline-start:0;margin-top:12px}
   .btn{width:100%;justify-content:center}
   /* velký titulek: každé slovo na svém řádku, fold končí u štítků */
   h1{font-size:clamp(50px,17.5vw,68px)}
@@ -459,25 +466,26 @@ h1 .pridomek .pw.is-hidden{opacity:0}
       <div class="hero-actions">
         <a class="btn btn-primary" href="#">Prohlédnout program</a>
         <a class="btn btn-ghost" href="#">Objevit Znojmo</a>
+      </div>
+    </div>
+
+    <span class="cred" id="heroCred" aria-hidden="true"></span>
+  </section>
+
+  <!-- Nenechte si ujít — tmavý pás hned pod foldem heru; chipy Dnes/Víkend patří k akcím -->
+  <div class="strip-band">
+    <section class="strip" aria-label="Nenechte si ujít">
+      <div class="strip-head">
+        <span class="mono">Právě teď</span>
+        <span class="h">Nenechte si ujít</span>
         <span class="chips">
           <button class="chip">Dnes</button>
           <button class="chip">Tento víkend</button>
         </span>
       </div>
-    </div>
-
-    <div class="strip-band">
-      <section class="strip" aria-label="Nenechte si ujít">
-        <div class="strip-head">
-          <span class="mono">Právě teď</span>
-          <span class="h">Nenechte si ujít</span>
-        </div>
-        <div class="strip-cards" id="stripCards"></div>
-      </section>
-    </div>
-
-    <span class="cred" id="heroCred" aria-hidden="true"></span>
-  </section>
+      <div class="strip-cards" id="stripCards"></div>
+    </section>
+  </div>
 
   <!-- Sem postupně doplníme obsah HP (sekce dle IA) -->
   <section class="hp-space" aria-label="Připravovaný obsah">
