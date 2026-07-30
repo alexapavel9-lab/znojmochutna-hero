@@ -83,7 +83,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 /* ============================================================
    INTRO — jednou za session: ochutnávka přídomků → opona → hero
    ============================================================ */
-.intro{position:fixed;inset:0;z-index:100;background:var(--brand-green);display:grid;place-items:center;cursor:pointer;transition:transform .7s cubic-bezier(.7,0,.2,1)}
+.intro{position:fixed;inset:0;z-index:100;background:var(--brand-green);display:grid;place-items:center;cursor:pointer;overflow:hidden;transition:transform .7s cubic-bezier(.7,0,.2,1)}
 .intro::before{content:"";position:absolute;right:0;bottom:0;width:min(74vw,660px);aspect-ratio:1/1;background:url('assets/okurky.png') bottom right/contain no-repeat;mix-blend-mode:darken;opacity:0;animation:introIn .9s .35s var(--ease) forwards;pointer-events:none}
 .intro.leave{transform:translateY(-100%)}
 .intro-inner{display:flex;flex-direction:column;align-items:center;gap:14px;opacity:0;animation:introIn .5s .12s var(--ease) forwards;text-align:center;padding:20px}
@@ -310,6 +310,8 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 #mobileNav{display:none}
 @media (max-width:1160px){
   .nav,.tools .icon-btn.search span,.strip-head{display:none}
+  /* větší okurka v intru na tabletu */
+  .intro::before{width:min(82vw,640px)}
   .bar .icon-btn.search{padding:0;width:46px;justify-content:center}
   .bar .icon-btn.search svg{width:24px;height:24px}
   .hero-actions{row-gap:22px}
@@ -390,6 +392,8 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 @media (max-width:560px){
   .bar{gap:16px}
   .bar .lang,.bar .theme-toggle{display:none}
+  /* výrazně větší okurka v intru na mobilu (kotvená vpravo dole, přesah ořízne .intro) */
+  .intro::before{width:min(118vw,560px)}
   /* logo pod sebou, větší */
   .wordmark{flex-direction:column;align-items:flex-start;gap:0;line-height:1;font-size:19.5px}
   .wordmark i{font-size:17px;margin-top:2px}
