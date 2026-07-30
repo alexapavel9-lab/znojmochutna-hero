@@ -267,17 +267,18 @@ h1 .pridomek .pw.is-hidden{opacity:0}
 .f-okurka{position:absolute;right:0;bottom:0;z-index:0;width:min(52vw,680px);aspect-ratio:1/1;background:url('assets/okurky-lines.png') bottom right/contain no-repeat;opacity:.16;pointer-events:none}
 .f-inner,.f-bottom{position:relative;z-index:1}
 .f-inner{max-width:var(--max);margin-inline:auto;padding:clamp(40px,4.8vw,68px) var(--gutter) 0} /* horní odsazení = spodní mezera CTA pásu (~68px) */
-.f-cta{display:flex;justify-content:space-between;align-items:flex-end;gap:32px 40px;flex-wrap:wrap;padding-bottom:clamp(32px,4vw,44px);border-bottom:1px solid var(--f-line)}
+.f-cta{display:flex;justify-content:space-between;align-items:center;gap:32px 40px;flex-wrap:wrap;padding-bottom:clamp(40px,4.8vw,68px);border-bottom:1px solid var(--f-line)}
 .f-cta h3{font-weight:700;font-size:clamp(34px,4.5vw,60px);letter-spacing:-.025em;line-height:1.02}
 .f-cta h3 span{color:var(--f-mint)}
-.f-news{min-width:min(380px,100%)}
+.f-news{min-width:min(380px,100%);position:relative}
 .f-news-row{display:flex;gap:8px}
 .f-news input{flex:1;height:52px;padding:0 16px;border-radius:12px;border:1px solid var(--f-line);background:rgba(255,255,255,.04);color:var(--f-ink);font:inherit;font-size:15px}
 .f-news input::placeholder{color:var(--f-dim)}
 .f-news input:focus{outline:none;border-color:var(--f-mint)}
 .f-news button{padding:0 22px;height:52px;border-radius:12px;background:var(--f-mint);color:#051B11;font-weight:600;flex:none;transition:.2s var(--ease)}
 .f-news button:hover{background:#ADE0B9}
-.f-news .hint{color:var(--f-dim);font-size:12px;margin-top:9px}
+/* hint mimo tok — titulek se centruje jen na řádek s inputem */
+.f-news .hint{position:absolute;top:calc(100% + 9px);left:0;color:var(--f-dim);font-size:12px}
 .f-main{display:grid;grid-template-columns:1.45fr 1fr 1fr 1.15fr;gap:32px 24px;padding:clamp(32px,4vw,44px) 0}
 .f-brand .f-wordmark{font-weight:600;font-size:21px;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:.4ch}
 .f-brand .f-wordmark b{font-weight:600;color:var(--f-ink)}
