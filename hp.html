@@ -526,7 +526,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
         <a href="#">Program akcí</a>
         <a href="#">Objevuj Znojmo</a>
         <a href="#">Víno &amp; sklepy</a>
-        <a href="#">Plánování návštěvy</a>
+        <a href="#">Infocentrum</a>
         <a href="#">Vstupenky</a>
         <a class="f-action" href="#">Přidat akci →</a>
       </nav>
@@ -537,6 +537,8 @@ h1 .pridomek .pw.is-hidden{opacity:0}
         <a href="#">Kariéra</a>
         <a href="#">Press &amp; média</a>
         <a href="#">Kontakty</a>
+        <!-- Listy: jen proklik na web města (vlastní stránka nebude) — přesnou URL doplnit -->
+        <a href="https://www.znojmocity.cz" target="_blank" rel="noopener">Znojemské listy&nbsp;↗</a>
       </nav>
       <div class="f-col f-contact">
         <h4>Kontakt</h4>
@@ -544,6 +546,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
         <address>
           <span>Znojemská Beseda</span>
           <a href="https://mapy.cz/zakladni?q=Masarykovo%20n%C3%A1m%C4%9Bst%C3%AD%20449%2F22%2C%20669%2002%20Znojmo" target="_blank" rel="noopener" aria-label="Otevřít adresu na mapě">Masarykovo náměstí 449/22<br>669 02 Znojmo&nbsp;↗</a>
+          <span>IČO 00092720 · DIČ CZ00092720</span>
         </address>
         <a href="tel:+420515300240">+420 515 300 240</a>
         <a href="mailto:tic@znojemskabeseda.cz">tic@znojemskabeseda.cz</a>
@@ -584,13 +587,13 @@ const MENU = {
     featured:{theme:'map',ghost:'▲',kicker:'Výhled',title:'Radniční věž',meta:'80 m · panorama města',img:'assets/radnice.jpg'} },
   vino: { label:'Víno & sklepy',
     columns:[
-      {title:'Přehled', mAll:true, links:[{t:'Víno & sklepy',d:'úvod sekce'},{t:'Sklepní uličky'},{t:'Vinařství'},{t:'VOC Znojmo'},{t:'Vinařské akce'}]},
-      {title:'Za vínem', links:[{t:'Vinařské trasy'},{t:'Degustace'},{t:'Enotéka'},{t:'Znojemské vinobraní'}]},
+      {title:'Přehled', links:[{t:'Víno & sklepy',d:'úvod sekce'},{t:'Sklepní uličky'},{t:'Vinařství'},{t:'Vinařské akce'}]},
+      {title:'Za vínem', mAll:true, links:[{t:'Vinařské trasy'},{t:'Degustace'},{t:'Enotéka'},{t:'VOC Znojmo'},{t:'Znojemské vinobraní'}]},
       {title:'Nejbližší vinařské akce', links:[{t:'Otevřené sklepy Šatov',d:'so 6. 9.'},{t:'Degustace VOC Znojmo',d:'pá 12. 9.'},{t:'Znojemské vinobraní',d:'12.–14. 9.'}]},
     ],
     action:{t:'Přidat akci',note:'pro pořadatele',icon:'plus'},
     featured:{theme:'cellar',ghost:'❦',kicker:'Ochutnejte',title:'Sklepní ulička Šatov',meta:'kraj vína · celoročně',img:'assets/vino.jpg?v=2'} },
-  planovani: { label:'Plánování',
+  planovani: { label:'Infocentrum',
     columns:[
       {title:'Než vyrazíte', links:[{t:'Infocentra'},{t:'Doprava & parkování'}]},
       {title:'Vstupenky', links:[{t:'Kde koupit'},{t:'Online (GoOut)'},{t:'Kombinované vstupné'}]},
