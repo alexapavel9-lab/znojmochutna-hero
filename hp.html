@@ -360,6 +360,8 @@ h1 .pridomek .pw.is-hidden{opacity:0}
   .m-sec .m-body a{padding:10px 0;font-size:16.5px;color:var(--ink-dim);border-bottom:1px dashed rgba(240,241,236,.09)}
   .m-sec .m-body a:last-child{border-bottom:none}
   .m-sec .m-body a.m-more{color:var(--ink);font-weight:500;border-bottom:none}
+  .m-sec .m-body a.m-goto{display:flex;align-items:center;gap:8px;color:var(--ink);font-weight:600;padding:4px 0 14px;border-bottom:none}
+  .m-sec .m-body a.m-goto svg{color:var(--mint)}
   .m-sec .m-body a.m-action{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;color:var(--mint);font-weight:500;font-size:15.5px}
   .m-sec .m-body a.m-action .a-left{display:inline-flex;align-items:center;gap:9px}
   .m-sec .m-body a.m-action .a-left svg{width:16px;height:16px;flex:none}
@@ -525,7 +527,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
         <h4>Na webu</h4>
         <a href="#">Program akcí</a>
         <a href="#">Objevuj Znojmo</a>
-        <a href="#">Víno &amp; sklepy</a>
+        <a href="#">Za vínem</a>
         <a href="#">Infocentrum</a>
         <a href="#">Vstupenky</a>
         <a class="f-action" href="#">Přidat akci →</a>
@@ -534,7 +536,7 @@ h1 .pridomek .pw.is-hidden{opacity:0}
         <h4>Znojemská Beseda</h4>
         <a href="#">Profil organizace</a>
         <a href="#">Pronájmy prostor</a>
-        <a href="#">Kariéra</a>
+        <a href="#">Povinné informace</a>
         <a href="#">Press &amp; média</a>
         <a href="#">Kontakty</a>
         <!-- Listy: jen proklik na web města (vlastní stránka nebude) — přesnou URL doplnit -->
@@ -572,7 +574,7 @@ const MENU = {
   program: { label:'Program akcí',
     columns:[
       {title:'Přehled', links:[{t:'Všechny akce'},{t:'Kalendář'},{t:'Mapa akcí'}]},
-      {title:'Kategorie', links:[{t:'Divadlo'},{t:'Hudba'},{t:'Kino'},{t:'Festivaly'},{t:'Všech 16 kategorií',arrow:true}]},
+      {title:'Kategorie', links:[{t:'Divadlo'},{t:'Film'},{t:'Hudba'},{t:'Víno'},{t:'Všech 13 kategorií',arrow:true}]},
       {title:'Významné akce', links:[{t:'Znojemské vinobraní'},{t:'Kulturní léto'},{t:'Advent'},{t:'800 let města'},{t:'Všechny významné akce',arrow:true}]},
     ],
     action:{t:'Přidat akci',note:'pro pořadatele',icon:'plus'}, actionCol:0,
@@ -580,15 +582,15 @@ const MENU = {
   objevuj: { label:'Objevuj Znojmo',
     columns:[
       {title:'Místa & památky', links:[{t:'Radniční věž'},{t:'Rotunda sv. Kateřiny'},{t:'Znojemské podzemí'},{t:'Městské divadlo'},{t:'Mikulášský kostel'},{t:'Znojemský hrad'},{t:'Všechna místa',arrow:true}]},
-      {title:'Tematické', links:[{t:'Cykloturistika'},{t:'Pěší turistika'},{t:'NP Podyjí'},{t:'Vodáctví na Dyji'},{t:'Znojmo s dětmi'},{t:'Prohlídky s průvodcem'},{t:'Prohlídka historie města'}]},
-      {title:'Další informace', links:[{t:'Kde sportovat'},{t:'Kde se vykoupat'},{t:'Historie města'}]},
+      {title:'Tematické', links:[{t:'Cykloturistika'},{t:'Pěší turistika'},{t:'NP Podyjí'},{t:'Vodáctví na Dyji'},{t:'Znojmo s dětmi'},{t:'Prohlídky s průvodcem'},{t:'Historie města'}]},
+      {title:'Další informace', links:[{t:'Kde sportovat'},{t:'Kde se vykoupat'}]},
     ],
     action:{t:'Interaktivní mapa',note:'místa na mapě',icon:'map'},
     featured:{theme:'map',ghost:'▲',kicker:'Výhled',title:'Radniční věž',meta:'80 m · panorama města',img:'assets/radnice.jpg'} },
-  vino: { label:'Víno & sklepy',
+  vino: { label:'Za vínem',
     columns:[
-      {title:'Přehled', links:[{t:'Víno & sklepy',d:'úvod sekce'},{t:'Sklepní uličky'},{t:'Vinařství'},{t:'Vinařské akce'}]},
-      {title:'Za vínem', mAll:true, links:[{t:'Vinařské trasy'},{t:'Degustace'},{t:'Enotéka'},{t:'VOC Znojmo'},{t:'Znojemské vinobraní'}]},
+      {title:'Přehled', links:[{t:'Za vínem',d:'úvod sekce'},{t:'Vinařské akce'}]},
+      {title:'Vinařské zážitky', mAll:true, links:[{t:'Vinařské trasy'},{t:'Degustace'},{t:'Enotéka'},{t:'VOC Znojmo'},{t:'Znojemské vinobraní'}]},
       {title:'Nejbližší vinařské akce', links:[{t:'Otevřené sklepy Šatov',d:'so 6. 9.'},{t:'Degustace VOC Znojmo',d:'pá 12. 9.'},{t:'Znojemské vinobraní',d:'12.–14. 9.'}]},
     ],
     action:{t:'Přidat akci',note:'pro pořadatele',icon:'plus'},
@@ -599,15 +601,15 @@ const MENU = {
       {title:'Vstupenky', links:[{t:'Kde koupit'},{t:'Online (GoOut)'},{t:'Kombinované vstupné'}]},
       {title:'Ke stažení', links:[{t:'Mapy'},{t:'Brožury a průvodci'},{t:'Programy (PDF)'}]},
     ],
-    action:{t:'Naplánuj si den',note:'krok za krokem',icon:'calendar'},
+    action:{t:'Tipy na návštěvu',note:'podle času a s kým',icon:'calendar'},
     featured:{theme:'plan',ghost:'✳',kicker:'Newsletter',title:'Co se ve Znojmě chystá',meta:'tipy jednou týdně',img:'assets/hudba_2.jpeg'} },
 };
 
 const STRIP = [
-  {cat:'Festival',  t:'Znojemské vinobraní', m:'12.–14. 9.'},
-  {cat:'Divadlo',   t:'Léto na nádvoří Domu umění', m:'Dnes · 20:00'},
-  {cat:'Koncert',   t:'Kulturní léto: Podyjí Sessions', m:'So · 19:30'},
-  {cat:'Prohlídka', t:'Večerní prohlídky podzemí', m:'Pá · 21:00'},
+  {cat:'Víno',          t:'Znojemské vinobraní', m:'12.–14. 9.'},
+  {cat:'Divadlo',       t:'Léto na nádvoří Domu umění', m:'Dnes · 20:00'},
+  {cat:'Hudba',         t:'Kulturní léto: Podyjí Sessions', m:'So · 19:30'},
+  {cat:'Rodina a děti', t:'Nedělní pohádka: O drakovi', m:'Ne · 15:00'},
 ];
 
 const el = (h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstElementChild;};
@@ -651,7 +653,7 @@ Object.entries(MENU).forEach(([key,data],i)=>{
       ${more?`<a class="m-more" href="#">${more} →</a>`:''}
     </div>`;
   }).join('');
-  mob.appendChild(el(`<details class="m-sec"><summary><span class="m-num">0${i+1}</span><span class="m-label">${data.label}</span><span class="plus">+</span></summary><div class="m-body">${groups}${data.action?`<a class="m-action" href="#"><span class="a-left">${AICONS[data.action.icon]||''}<span>${data.action.t}</span></span><small>${data.action.note}</small></a>`:''}</div></details>`));
+  mob.appendChild(el(`<details class="m-sec"><summary><span class="m-num">0${i+1}</span><span class="m-label">${data.label}</span><span class="plus">+</span></summary><div class="m-body"><a class="m-goto" href="#">Přejít na sekci ${arrow}</a>${groups}${data.action?`<a class="m-action" href="#"><span class="a-left">${AICONS[data.action.icon]||''}<span>${data.action.t}</span></span><small>${data.action.note}</small></a>`:''}</div></details>`));
 });
 
 /* Mobile drawer utilities — Vstupenky i Hledat jsou v liště; v draweru jen sekce + jazyk/téma dole */
