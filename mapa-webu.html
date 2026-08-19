@@ -53,6 +53,7 @@ h1 i{font-style:normal;font-family:var(--mono);font-weight:400;color:var(--green
 .col li small{color:#5C6157;font-weight:400}
 .col li.ghost{background:transparent;border:1px dashed var(--line);color:#5C6157;font-weight:400}
 .col li.ghost.active{border-color:var(--green);border-style:solid;background:#fff}
+.col li .nm{font-family:var(--mono);font-style:normal;font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--grey);border:1px solid var(--line);border-radius:999px;padding:2px 7px;margin-left:6px;white-space:nowrap;vertical-align:1px}
 
 /* ---------- popisný panel ---------- */
 .aside{position:sticky;top:16px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;min-height:220px}
@@ -128,7 +129,7 @@ h1 i{font-style:normal;font-family:var(--mono);font-weight:400;color:var(--green
 
   <div class="foot">
     <span>Znojmo chutná · mapa webu · 19. 8. 2026</span>
-    <span>čárkovaně = pohled / vrstva mapy · ×N = generováno z CMS</span>
+    <span>čárkovaně = pohled / vrstva mapy · ×N = generováno z CMS · „mimo menu" = stránka existuje, v navigaci není</span>
   </div>
 
   <div class="appendix" id="appendix"><h2>Popisná část — co bloky obsahují</h2></div>
@@ -189,7 +190,7 @@ const MAPA=[
      o:['Divadlo','Film','Hudba','Folklor a tradice','Výstavy','Víno','Gastro','Trhy a jarmarky','Plesy','Rodina a děti','Sport','Vzdělávání a workshopy','Ostatní','rozcestník kategorií /akce/kategorie','vlastnosti (zdarma, pro děti…) = štítky, ne kategorie']},
     {t:'Významné akce', s:'×6 kampaní',
      d:'Kampaňové stránky s krátkými adresami přímo v kořeni — tisknou se na plakáty, adresa drží napříč ročníky. Jedna pevná šablona pro všech šest.',
-     o:['/vinobrani · /kulturni-leto · /znojmo-zije-divadlem · /advent · /abo · /800-let','rozcestník: Všechny významné akce /akce/vyznamne','hero + program kampaně (vazba akce → kampaň)','praktické info · PDF přílohy · FAQ','galerie ročníků — sem míří fotky z proběhlých akcí']},
+     o:['/vinobrani · /kulturni-leto · /znojmo-zije-divadlem · /advent · /abo · /800-let','rozcestník: Všechny významné akce /akce/vyznamne','ABO a Znojmo žije divadlem: vlastní stránka, v megamenu není — vede na ně rozcestník a přímá adresa','hero + program kampaně (vazba akce → kampaň)','praktické info · PDF přílohy · FAQ','galerie ročníků — sem míří fotky z proběhlých akcí']},
     {t:'Přidat akci', s:'formulář',
      d:'Samoobsluha pro externí pořadatele s moderační frontou a AI úpravou textu. Nic se nezveřejní samo — publikuje vždy redakce, ve třech jazycích naráz.',
      o:['formulář: jeden termín · captcha + antispam','moderační fronta · AI úprava textu + návrh kategorie','vrácení pořadateli přes odkaz — bez zakládání účtu','noční import z GoOut (přistane jako návrh ke kontrole)','ZnojmoRegion RSS = doobjednávka']},
@@ -210,8 +211,8 @@ const MAPA=[
     {t:'Body zájmu', s:'×N',
      d:'Body v mapě podle kategorií — ikona a barva pinu se berou z kategorie. Základní síť naplní kurátorský seznam (147 bodů) a OpenStreetMap; aktualizace nikdy nepřepíše ruční úpravy redakce. Praktické body (WC, parkování) vlastní stránky nemají.',
      o:['hřiště · vyhlídky · koupání · půjčovny · cyklopointy…','foto · popis · poloha · otvíračka · odkaz','kategorie bez detailové stránky: WC · parkování','naplnění: kurátorský seznam + OSM']},
-    {t:'Trasy & okruhy', s:'+ GPX ×N',
-     d:'Kurátorské pojmenované trasy — pěší, cyklo, vinařské, vodácké. Stránka existuje, v hlavním menu není; k návštěvníkovi se trasy dostávají přes tematické stránky a mapu.',
+    {t:'Trasy & okruhy', s:'+ GPX ×N', nm:true,
+     d:'Kurátorské pojmenované trasy — pěší, cyklo, vinařské, vodácké. Stránka existuje, v hlavním menu není; k návštěvníkovi se trasy dostávají přes tematické stránky a mapu. Přehled je zároveň cíl odkazů „všechny trasy" a rodič detailů tras.',
      o:['mapa trasy · GPX ke stažení','délka · převýšení · náročnost · zastávky','typy: pěší · cyklo · vinařská · vodácká']},
     {t:'Tematické stránky', s:'×7 · jedna šablona',
      d:'Sedm stránek na jedné pevné šabloně o devíti částech — redakční text odpovídá na „proč a jak", databáze na „co konkrétně a kdy". Prázdné bloky se samy skryjí; návštěvník nikdy nenarazí na prázdné okno.',
@@ -294,7 +295,7 @@ const board=document.getElementById('board');
 MAPA.forEach((sec,si)=>{
   const lis=sec.items.map((it,ii)=>`
     <li data-si="${si}" data-ii="${ii}" class="${it.ghost?'ghost':''}">
-      <span class="n">${ii+1}.</span> ${it.t}${it.s?` <small>(${it.s})</small>`:''}
+      <span class="n">${ii+1}.</span> ${it.t}${it.s?` <small>(${it.s})</small>`:''}${it.nm?` <em class="nm">mimo menu</em>`:''}
     </li>`).join('');
   board.appendChild(el(`<div class="col">
     <div class="pill">${sec.pill}<small>${sec.sub}</small></div>
