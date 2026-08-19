@@ -53,9 +53,6 @@ h1 i{font-style:normal;font-family:var(--mono);font-weight:400;color:var(--green
 .col li small{color:#5C6157;font-weight:400}
 .col li.ghost{background:transparent;border:1px dashed var(--line);color:#5C6157;font-weight:400}
 .col li.ghost.active{border-color:var(--green);border-style:solid;background:#fff}
-.nm{font-family:var(--mono);font-style:normal;font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--grey);border:1px solid var(--line);border-radius:999px;padding:2px 7px;white-space:nowrap;vertical-align:1px}
-.col li .nm{margin-left:6px}
-
 /* ---------- legenda ---------- */
 .legend{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:center;margin:-8px 0 26px;font-size:12px;color:#5C6157}
 .legend b{font-weight:600;color:var(--ink)}
@@ -124,7 +121,6 @@ h1 i{font-style:normal;font-family:var(--mono);font-weight:400;color:var(--green
     <span><i class="sw"></i><b>plný blok</b> = stránka, která bydlí tady — staví se a počítá se jednou</span>
     <span><i class="sw dash"></i><b>čárkovaný</b> = pohled nebo vrstva mapy — okno na obsah odjinud, žádná další stránka</span>
     <span><em class="xn">×N</em><b>detaily</b> generované automaticky z obsahu</span>
-    <span><em class="nm">mimo menu</em>&nbsp; stránka existuje, v navigaci není</span>
   </div>
 
   <div class="layout">
@@ -227,7 +223,7 @@ const MAPA=[
     {t:'Body zájmu', s:'×N',
      d:'Body v mapě podle kategorií — ikona a barva pinu se berou z kategorie. Základní síť naplní kurátorský seznam (147 bodů) a OpenStreetMap; aktualizace nikdy nepřepíše ruční úpravy redakce. Praktické body (WC, parkování) vlastní stránky nemají.',
      o:['hřiště · vyhlídky · koupání · půjčovny · cyklopointy…','foto · popis · poloha · otvíračka · odkaz','kategorie bez detailové stránky: WC · parkování','naplnění: kurátorský seznam + OSM']},
-    {t:'Trasy & okruhy', s:'+ GPX ×N', nm:true,
+    {t:'Trasy & okruhy', s:'+ GPX ×N',
      d:'Kurátorské pojmenované trasy — pěší, cyklo, vinařské, vodácké. Stránka existuje, v hlavním menu není; k návštěvníkovi se trasy dostávají přes tematické stránky a mapu. Přehled je zároveň cíl odkazů „všechny trasy" a rodič detailů tras.',
      o:['mapa trasy · GPX ke stažení','délka · převýšení · náročnost · zastávky','typy: pěší · cyklo · vinařská · vodácká']},
     {t:'Tematické stránky', s:'×7 · jedna šablona',
@@ -311,7 +307,7 @@ const board=document.getElementById('board');
 MAPA.forEach((sec,si)=>{
   const lis=sec.items.map((it,ii)=>`
     <li data-si="${si}" data-ii="${ii}" class="${it.ghost?'ghost':''}">
-      <span class="n">${ii+1}.</span> ${it.t}${it.s?` <small>(${it.s})</small>`:''}${it.nm?` <em class="nm">mimo menu</em>`:''}
+      <span class="n">${ii+1}.</span> ${it.t}${it.s?` <small>(${it.s})</small>`:''}
     </li>`).join('');
   board.appendChild(el(`<div class="col">
     <div class="pill">${sec.pill}<small>${sec.sub}</small></div>
