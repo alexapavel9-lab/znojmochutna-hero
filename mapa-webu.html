@@ -29,7 +29,10 @@ header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
 h1{font-size:clamp(24px,3vw,34px);font-weight:700;letter-spacing:-.02em;margin-top:6px}
 h1 i{font-style:normal;font-family:var(--mono);font-weight:400;color:var(--green);letter-spacing:-.03em}
 .hint{font-size:12.5px;color:var(--grey);margin-top:6px}
-.btn-print{font:inherit;font-weight:600;font-size:13px;border:1px solid var(--ink);background:#fff;color:var(--ink);padding:9px 15px;border-radius:10px;cursor:pointer}
+.head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn-print,.btn-link{font:inherit;font-weight:600;font-size:13px;border:1px solid var(--ink);background:#fff;color:var(--ink);padding:9px 15px;border-radius:10px;cursor:pointer}
+.btn-link{border-color:var(--line);color:#5C6157}
+.btn-link:hover{border-color:var(--green);color:var(--green)}
 .btn-print:hover{background:var(--ink);color:var(--paper)}
 
 /* ---------- layout: deska + popisný panel ---------- */
@@ -88,7 +91,7 @@ h1 i{font-style:normal;font-family:var(--mono);font-weight:400;color:var(--green
 @media print{
   body{background:#fff}
   .wrap{max-width:none;padding:0}
-  .btn-print{display:none}
+  .btn-print,.btn-link{display:none}
   .hint{display:none}
   .layout{grid-template-columns:1fr}
   .aside{display:none!important}
@@ -114,7 +117,10 @@ h1 i{font-style:normal;font-family:var(--mono);font-weight:400;color:var(--green
       <h1>Mapa webu <i>znojmochutna.cz</i></h1>
       <div class="hint">Klikněte na blok — vpravo se ukáže, co to je a co bude obsahovat.</div>
     </div>
-    <button class="btn-print" onclick="print()">Vytisknout / PDF</button>
+    <div class="head-actions">
+      <a class="btn-link" href="https://alexapavel9-lab.github.io/znojmochutna-hero/hp.html">Návrh vzhledu ↗</a>
+      <button class="btn-print" onclick="print()">Vytisknout / PDF</button>
+    </div>
   </header>
 
   <div class="legend" aria-label="Legenda">
